@@ -3,14 +3,14 @@
         "id": "1",
         "name": "Chicken Adobo",
         "type": "chicken",
-        "category": "home cooked",
+        "category": "home-cooked",
         "image": "images/chicken-adobo.webp"
     },
     {
         "id": "2",
         "name": "Sinigang na Baboy",
         "type": "pork",
-        "category": "home cooked",
+        "category": "home-cooked",
         "image": "images/sinigang-na-baboy.jpg"
     },
     {
@@ -24,7 +24,7 @@
         "id": "4",
         "name": "Lumpiang Shanghai",
         "type": "vegetables",
-        "category": "home cooked",
+        "category": "home-cooked",
         "image": "images/lumpiang-shanghai.jpg"
     },
     {
@@ -52,28 +52,28 @@
         "id": "8",
         "name": "Adobong Sitaw",
         "type": "pork, vegetable",
-        "category": "home cooked",
+        "category": "home-cooked",
         "image": "images/adobong-sitaw.jpg"
     },
     {
         "id": "9",
         "name": "Pininyahang Manok",
         "type": "chicken",
-        "category": "home cooked",
+        "category": "home-cooked",
         "image": "images/pininyahang-manok.jpg"
     },
     {
         "id": "10",
         "name": "Filipino Spaghetti",
         "type": "pork, beef",
-        "category": "home cooked",
+        "category": "home-cooked",
         "image": "images/filipino-spaghetti.jpg"
     },
     {
         "id": "11",
         "name": "Creamy Carbonara",
         "type": "pork, beef",
-        "category": "home cooked",
+        "category": "home-cooked",
         "image": "images/creamy-carbonara.jpeg"
     },
     {
@@ -81,7 +81,7 @@
         "name": "Shabu-shabu Hot pot",
         "type": "pork, beef",
         "category": "home cooked",
-        "image": "images/shabu-shabu.jfif"
+        "image": "images/shabu-shabu.jpg"
     },
     {
         "id": "13",
@@ -94,21 +94,21 @@
         "id": "14",
         "name": "Samgyupsal (Korean BBQ)",
         "type": "pork, beef",
-        "category": "home cooked",
-        "image": "images/samgyupsal.jfif"
+        "category": "home-cooked",
+        "image": "images/samgyupsal.jpg"
     },
     {
         "id": "15",
         "name": "Kare-kare",
         "type": "pork",
-        "category": "home cooked",
+        "category": "home-cooked",
         "image": "images/kare-kare.jpg"
     },
     {
         "id": "16",
         "name": "Ginisang Upo",
         "type": "vegetables",
-        "category": "home cooked",
+        "category": "home-cooked",
         "image": "images/ginisang-upo.jpg"
     },
     {
@@ -131,7 +131,198 @@
         "type": "chicken, beef",
         "category": "takeaway",
         "image": "images/carls-jr-burger.png"
+    },
+    {
+        "id": "20",
+        "name": "Sinampalukang Manok",
+        "type": "chicken",
+        "category": "home-cooked",
+        "image": "images/sinampalukang-manok.jpg"
+    },
+    {
+        "id": "21",
+        "name": "Pinapaitan",
+        "type": "beef",
+        "category": "home-cooked",
+        "image": "images/pinapaitan.jpg"
+    },
+    {
+        "id": "22",
+        "name": "Pork Sisig",
+        "type": "pork",
+        "category": "home-cooked",
+        "image": "images/pork-sisig.jpg"
+    },
+    {
+        "id": "23",
+        "name": "Siomai",
+        "type": "pork",
+        "category": "home-cooked",
+        "image": "images/siomai.webp"
+    },
+    {
+        "id": "24",
+        "name": "Sopas",
+        "type": "chicken",
+        "category": "home-cooked",
+        "image": "images/sopas.jpg"
+    },
+    {
+        "id": "25",
+        "name": "Chopsuey",
+        "type": "vegetables",
+        "category": "home-cooked",
+        "image": "images/chop-suey.jpg"
+    },
+    {
+        "id": "26",
+        "name": "Tortang Talong",
+        "type": "vegetables",
+        "category": "home-cooked",
+        "image": "images/tortang-talong.webp"
+    },
+    {
+        "id": "27",
+        "name": "Japanese Chicken Katsu Curry",
+        "type": "chicken",
+        "category": "home-cooked",
+        "image": "images/japanese-chicken-katsu-curry.jpg"
+    },
+    {
+        "id": "28",
+        "name": "Baked Sushi",
+        "type": "rice",
+        "category": "home-cooked",
+        "image": "images/baked-sushi.avif"
+    },
+    {
+        "id": "29",
+        "name": "Tacos",
+        "type": "beef, vegetables",
+        "category": "home-cooked",
+        "image": "images/tacos.webp"
+    },
+    {
+        "id": "30",
+        "name": "Chicken Inasal",
+        "type": "chicken",
+        "category": "home-cooked",
+        "image": "images/chicken-inasal.jpg"
+    },
+    {
+        "id": "31",
+        "name": "Pork Giniling Picadillo",
+        "type": "pork",
+        "category": "home-cooked",
+        "image": "images/pork-giniling.jpg"
+    },
+    {
+        "id": "32",
+        "name": "Pork BBQ",
+        "type": "pork",
+        "category": "home-cooked",
+        "image": "images/pork-bbq.jpg"
+    },
+    {
+        "id": "33",
+        "name": "Dragon Garden Chinese Restaurant",
+        "type": "chicken, pork, beef, lamb, vegetables, seafood",
+        "category": "dine-in, takeaway",
+        "image": "images/dragon-garden-christchurch.jpeg"
+    },
+    {
+        "id": "34",
+        "name": "Fish and Chips",
+        "type": "seafood",
+        "category": "takeaway, home-cooked",
+        "image": "images/fish-and-chips.jpg"
+    },
+    {
+        "id": "35",
+        "name": "Lucky Me! Pancit Canton",
+        "type": "noodles",
+        "category": "home-cooked",
+        "image": "images/luckyme-pancit-canton.jpg"
+    },
+    {
+        "id": "36",
+        "name": "Pancit Bihon",
+        "type": "noodles, vegetables",
+        "category": "home-cooked",
+        "image": "images/pancit-bihon.jpg"
+    },
+    {
+        "id": "37",
+        "name": "Beef or Pork Caldereta",
+        "type": "pork, beef",
+        "category": "home-cooked",
+        "image": "images/caldereta.webp"
+    },
+    {
+        "id": "38",
+        "name": "Pizza Hut",
+        "type": "beef, pork",
+        "category": "takeaway",
+        "image": "images/pizza-hut.jpg"
+    },
+    {
+        "id": "39",
+        "name": "Hell Pizza",
+        "type": "beef, pork",
+        "category": "takeaway",
+        "image": "images/hell-pizza.jpg"
+    },
+    {
+        "id": "40",
+        "name": "Burger King",
+        "type": "beef, chicken",
+        "category": "takeaway",
+        "image": "images/burger-king.avif"
+    },
+    {
+        "id": "41",
+        "name": "Garlic Butter Shrimp",
+        "type": "seafood",
+        "category": "home-cooked",
+        "image": "images/garlic-butter-shrimp.jpg"
+    },
+    {
+        "id": "42",
+        "name": "Pork or Chicken Menudo",
+        "type": "pork, chicken",
+        "category": "home-cooked",
+        "image": "images/menudo.jpg"
+    },
+    {
+        "id": "43",
+        "name": "Burger Fuel",
+        "type": "chicken, beef, vegetable",
+        "category": "takeaway",
+        "image": "images/burger-fuel.jpg"
+    },
+    {
+        "id": "44",
+        "name": "Kebab Inn Pita Doner",
+        "type": "chicken, beef, lamb, vegetable",
+        "category": "takeaway",
+        "image": "images/kebab-inn-doner.avif"
+    },
+    {
+        "id": "45",
+        "name": "Church Corner Mall Chicken Skin",
+        "type": "chicken",
+        "category": "takeaway",
+        "image": "images/chicken-skin.webp"
+    },
+    {
+        "id": "46",
+        "name": "Chx to Go Flavored Chicken",
+        "type": "chicken",
+        "category": "takeaway, dine-in",
+        "image": "images/chx-to-go-chicken.jfif"
     }
-
+    
+    
+    
     
   ]
