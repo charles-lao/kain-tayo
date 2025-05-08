@@ -1,0 +1,32 @@
+[
+    {
+      "name": "Chicken Adobo",
+      "type": "chicken",
+      "category": "home-cooked",
+      "image": "images/chicken-adobo.webp"
+    },
+    {
+      "name": "Sinigang na Baboy",
+      "type": "pork",
+      "category": "home-cooked",
+      "image": "images/sinigang-na-baboy.jpg"
+    },
+    {
+      "name": "Afghan Restaurant Meal",
+      "type": "chicken, lamb",
+      "category": "takeaway",
+      "image": "images/afghan-chch.webp"
+    },
+    {
+      "name": "Lumpiang Shanghai",
+      "type": "vegetables",
+      "category": "home-cooked",
+      "image": "images/lumpiang-shanghai.jpg"
+    },
+    {
+        "name": "KFC Chicken",
+        "type": "chicken",
+        "category": "takeaway",
+        "image": "images/kfc-chicken.jpg"
+      }
+  ]
