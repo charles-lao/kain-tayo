@@ -1,32 +1,137 @@
 [
     {
-      "name": "Chicken Adobo",
-      "type": "chicken",
-      "category": "home-cooked",
-      "image": "images/chicken-adobo.webp"
+        "id": "1",
+        "name": "Chicken Adobo",
+        "type": "chicken",
+        "category": "home cooked",
+        "image": "images/chicken-adobo.webp"
     },
     {
-      "name": "Sinigang na Baboy",
-      "type": "pork",
-      "category": "home-cooked",
-      "image": "images/sinigang-na-baboy.jpg"
+        "id": "2",
+        "name": "Sinigang na Baboy",
+        "type": "pork",
+        "category": "home cooked",
+        "image": "images/sinigang-na-baboy.jpg"
     },
     {
-      "name": "Afghan Restaurant Meal",
-      "type": "chicken, lamb",
-      "category": "takeaway",
-      "image": "images/afghan-chch.webp"
+        "id": "3",
+        "name": "Afghan Restaurant Meal",
+        "type": "chicken, lamb",
+        "category": "takeaway",
+        "image": "images/afghan-chch.webp"
     },
     {
-      "name": "Lumpiang Shanghai",
-      "type": "vegetables",
-      "category": "home-cooked",
-      "image": "images/lumpiang-shanghai.jpg"
+        "id": "4",
+        "name": "Lumpiang Shanghai",
+        "type": "vegetables",
+        "category": "home cooked",
+        "image": "images/lumpiang-shanghai.jpg"
     },
     {
+        "id": "5",
         "name": "KFC Chicken",
         "type": "chicken",
         "category": "takeaway",
         "image": "images/kfc-chicken.jpg"
-      }
+    },
+    {
+        "id": "6",
+        "name": "Indian Paradise Chicken Biryani",
+        "type": "chicken",
+        "category": "takeaway",
+        "image": "images/indian-paradise-biryani.avif"
+    },
+    {
+        "id": "7",
+        "name": "McDonald's Burger",
+        "type": "chicken, beef",
+        "category": "takeaway",
+        "image": "images/mcdonalds-burger.png"
+    },
+    {
+        "id": "8",
+        "name": "Adobong Sitaw",
+        "type": "pork, vegetable",
+        "category": "home cooked",
+        "image": "images/adobong-sitaw.jpg"
+    },
+    {
+        "id": "9",
+        "name": "Pininyahang Manok",
+        "type": "chicken",
+        "category": "home cooked",
+        "image": "images/pininyahang-manok.jpg"
+    },
+    {
+        "id": "10",
+        "name": "Filipino Spaghetti",
+        "type": "pork, beef",
+        "category": "home cooked",
+        "image": "images/filipino-spaghetti.jpg"
+    },
+    {
+        "id": "11",
+        "name": "Creamy Carbonara",
+        "type": "pork, beef",
+        "category": "home cooked",
+        "image": "images/creamy-carbonara.jpeg"
+    },
+    {
+        "id": "12",
+        "name": "Shabu-shabu Hot pot",
+        "type": "pork, beef",
+        "category": "home cooked",
+        "image": "images/shabu-shabu.jfif"
+    },
+    {
+        "id": "13",
+        "name": "City Garden Chinese Takeaway",
+        "type": "pork, beef, chicken",
+        "category": "takeaway",
+        "image": "images/city-garden-chinese.avif"
+    },
+    {
+        "id": "14",
+        "name": "Samgyupsal (Korean BBQ)",
+        "type": "pork, beef",
+        "category": "home cooked",
+        "image": "images/samgyupsal.jfif"
+    },
+    {
+        "id": "15",
+        "name": "Kare-kare",
+        "type": "pork",
+        "category": "home cooked",
+        "image": "images/kare-kare.jpg"
+    },
+    {
+        "id": "16",
+        "name": "Ginisang Upo",
+        "type": "vegetables",
+        "category": "home cooked",
+        "image": "images/ginisang-upo.jpg"
+    },
+    {
+        "id": "17",
+        "name": "One Sushi Katsu Don",
+        "type": "chicken",
+        "category": "takeaway",
+        "image": "images/one-sushi-katsudon.avif"
+    },
+    {
+        "id": "18",
+        "name": "Domino's Pizza",
+        "type": "chicken, pork, beef",
+        "category": "takeaway",
+        "image": "images/dominos-pizza.jpg"
+    },
+    {
+        "id": "19",
+        "name": "Carl's Jr Burger",
+        "type": "chicken, beef",
+        "category": "takeaway",
+        "image": "images/carls-jr-burger.png"
+    }
+
+    
   ]
