@@ -106,8 +106,8 @@
     },
     {
         "id": "16",
-        "name": "Ginisang Upo",
-        "type": "vegetables",
+        "name": "Ginisang Upo with Giniling",
+        "type": "vegetables, pork",
         "category": "home-cooked",
         "image": "images/ginisang-upo.jpg"
     },
@@ -320,6 +320,118 @@
         "type": "chicken",
         "category": "takeaway, dine-in",
         "image": "images/chx-to-go-chicken.jfif"
+    },
+    {
+        "id": "47",
+        "name": "Empire Chicken",
+        "type": "chicken",
+        "category": "takeaway, dine-in",
+        "image": "images/empire-chicken.jpg"
+    },
+    {
+        "id": "48",
+        "name": "Seoulmate Korean Fried Chicken",
+        "type": "chicken",
+        "category": "takeaway, dine-in",
+        "image": "images/seoulmate-korean-fried-chicken.jpeg"
+    },
+    {
+        "id": "49",
+        "name": "Pork Bistek",
+        "type": "pork",
+        "category": "home-cooked",
+        "image": "images/pork-bistek.jpg"
+    },
+    {
+        "id": "50",
+        "name": "Ginisang Monggo",
+        "type": "vegetables, pork",
+        "category": "home-cooked",
+        "image": "images/ginisang-monggo.webp"
+    },
+    {
+        "id": "51",
+        "name": "Burger Steak",
+        "type": "beef",
+        "category": "home-cooked",
+        "image": "images/burger-steak.jpg"
+    },
+    {
+        "id": "52",
+        "name": "Tinolang Manok",
+        "type": "chicken, vegetables",
+        "category": "home-cooked",
+        "image": "images/tinolang-manok.jpg"
+    },
+    {
+        "id": "53",
+        "name": "Sinigang na Isda",
+        "type": "fish, seafood, vegetables",
+        "category": "home-cooked",
+        "image": "images/sinigang-na-isda.jpg"
+    },
+    {
+        "id": "54",
+        "name": "Tokwa't Baboy",
+        "type": "pork",
+        "category": "home-cooked",
+        "image": "images/tokwa-at-baboy.jfif"
+    },
+    {
+        "id": "55",
+        "name": "Adobong Baboy",
+        "type": "pork",
+        "category": "home-cooked",
+        "image": "images/adobong-baboy.jpg"
+    },
+    {
+        "id": "56",
+        "name": "Lugaw - Arroz Caldo",
+        "type": "rice",
+        "category": "home-cooked",
+        "image": "images/lugaw.jpg"
+    },
+    {
+        "id": "57",
+        "name": "Flavored Chicken Wings - (Honey BBQ, Garlic Parmesan)",
+        "type": "chicken",
+        "category": "home-cooked",
+        "image": "images/flavored-chicken-wings.jpg"
+    },
+    {
+        "id": "58",
+        "name": "Lechong Kawali",
+        "type": "pork",
+        "category": "home-cooked",
+        "image": "images/lechong-kawali.jpg"
+    },
+    {
+        "id": "59",
+        "name": "Nilagang Baka",
+        "type": "beef",
+        "category": "home-cooked",
+        "image": "images/nilagang-baka-bulalo.jpg"
+    },
+    {
+        "id": "60",
+        "name": "Sarciadong Isda",
+        "type": "fish, seafood",
+        "category": "home-cooked",
+        "image": "images/sarciadong-isda.jpg"
+    },
+    {
+        "id": "61",
+        "name": "Lechong Paksiw",
+        "type": "chicken, pork",
+        "category": "home-cooked",
+        "image": "images/lechong-paksiw.jpg"
+    },
+    {
+        "id": "62",
+        "name": "Paksiw na Bangus",
+        "type": "fish, seafood",
+        "category": "home-cooked",
+        "image": "images/paksiw-na-bangus.webp"
     }
     
     

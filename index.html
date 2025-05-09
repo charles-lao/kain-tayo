@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.3.1/dist/flatly/bootstrap.min.css">
+    <!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <!-- Bootstrap 5 and Bootswatch -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.5/dist/lumen/bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css">
     <link rel="icon" href="./favicon.ico"/>
-    <script defer src="/js/app.js"></script>
     <title>Kain Tayo | Home</title>
 
     <style>
@@ -22,26 +23,26 @@
 <body>
 
     <!-- Navigation Bar -->
-    <nav class="sticky-top navbar navbar-expand-lg navbar-dark bg-primary">
+    <nav class="sticky-top navbar navbar-expand-lg navbar-dark bg-dark p-3">
         <a class="navbar-brand" href="index.html">Kain Tayo</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
     
         <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="index.html">Home</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="list.html">Meals List</a>
-            </li>
-        </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="index.html">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="list.html">Meals List</a>
+                </li>
+            </ul>
         </div>
     </nav>
 
     <!-- Main Content -->
-    <div class="container text-center mt-4">
+    <div class="container text-center mt-4 fade-in">
 
         <h3 class="mb-3">🍽️ Kain Tayo!</h3>
         <p class="lead">Can't decide what to eat?</p>
@@ -53,7 +54,7 @@
         <div id="random-meal" class="mb-5">
             <div id="meal-spinner" class="d-none">
                 <div class="spinner-border text-primary" role="status">
-                <span class="sr-only">Loading...</span>
+                    <span class="sr-only"></span>
                 </div>
             </div>
             <div id="meal-card"></div>
@@ -83,21 +84,21 @@
             spinner.classList.remove('d-none');
 
             setTimeout(() => {
-            const randomMeal = meals[Math.floor(Math.random() * meals.length)];
+                const randomMeal = meals[Math.floor(Math.random() * meals.length)];
 
-            mealCard.innerHTML = `
-                <div class="card shadow-sm">
-                <img src="${randomMeal.image}" class="card-img-top meal-img" alt="${randomMeal.name}"
-                onerror="this.onerror=null; this.src='images/food-placeholder.png';">
-                <div class="card-body">
-                    <h5 class="card-title">${randomMeal.name}</h5>
-                    <p class="card-text">${randomMeal.type} • ${randomMeal.category}</p>
-                </div>
-                </div>
-            `;
+                mealCard.innerHTML = `
+                    <div class="card shadow-sm slide-up">
+                        <img src="${randomMeal.image}" class="card-img-top meal-img" alt="${randomMeal.name}"
+                        onerror="this.onerror=null; this.src='images/food-placeholder.png';">
+                        <div class="card-body">
+                            <h5 class="card-title">${randomMeal.name}</h5>
+                            <p class="card-text">${randomMeal.type} • ${randomMeal.category}</p>
+                        </div>
+                    </div>
+                `;
 
-            
-            spinner.classList.add('d-none');
+                
+                spinner.classList.add('d-none');
             }, 500);
         });
 
