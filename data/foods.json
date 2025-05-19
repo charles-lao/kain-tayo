@@ -79,8 +79,8 @@
     {
         "id": "12",
         "name": "Shabu-shabu Hot pot",
-        "type": "pork, beef",
-        "category": "home cooked",
+        "type": "pork, beef, vegetables",
+        "category": "home-cooked",
         "image": "images/shabu-shabu.jpg"
     },
     {
@@ -113,9 +113,9 @@
     },
     {
         "id": "17",
-        "name": "One Sushi Katsu Don",
-        "type": "chicken",
-        "category": "takeaway",
+        "name": "One Sushi Addington",
+        "type": "chicken, noodles",
+        "category": "takeaway, dine-in",
         "image": "images/one-sushi-katsudon.avif"
     },
     {
@@ -206,7 +206,7 @@
         "id": "30",
         "name": "Chicken Inasal",
         "type": "chicken",
-        "category": "home-cooked",
+        "category": "home-cooked, takeaway, dine-in",
         "image": "images/chicken-inasal.jpg"
     },
     {
@@ -297,14 +297,14 @@
         "id": "43",
         "name": "Burger Fuel",
         "type": "chicken, beef, vegetable",
-        "category": "takeaway",
+        "category": "takeaway, dine-in",
         "image": "images/burger-fuel.jpg"
     },
     {
         "id": "44",
         "name": "Kebab Inn Pita Doner",
         "type": "chicken, beef, lamb, vegetable",
-        "category": "takeaway",
+        "category": "takeaway, dine-in",
         "image": "images/kebab-inn-doner.avif"
     },
     {
@@ -432,6 +432,13 @@
         "type": "fish, seafood",
         "category": "home-cooked",
         "image": "images/paksiw-na-bangus.webp"
+    },
+    {
+        "id": "63",
+        "name": "Spam Musubi",
+        "type": "pork",
+        "category": "home-cooked",
+        "image": "images/spam-musubi.jpg"
     }
     
     

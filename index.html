@@ -24,7 +24,7 @@
 
     <!-- Navigation Bar -->
     <nav class="sticky-top navbar navbar-expand-lg navbar-dark bg-dark p-3">
-        <a class="navbar-brand" href="index.html">Kain Tayo</a>
+        <a class="navbar-brand" href="index.html">🍽️ Kain Tayo</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -44,7 +44,7 @@
     <!-- Main Content -->
     <div class="container text-center mt-4 fade-in">
 
-        <h3 class="mb-3">🍽️ Kain Tayo!</h3>
+        <!-- <h3 class="mb-3"> Kain Tayo!</h3> -->
         <p class="lead">Can't decide what to eat?</p>
 
         <button id="random-btn" class="btn btn-primary btn-lg mb-4">
@@ -61,46 +61,72 @@
         </div>
 
     </div>
+    
+    <!-- Bootstrap Modal #imageModal -->
+    <div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content bg-dark">
+                <div class="modal-body text-center p-0">
+                    <img id="modalImage" src="" class="img-fluid rounded" alt="Preview">
+                </div>
+            </div>
+        </div>
+    </div>
 
 
     <!-- Script -->
     <script>
         let meals = [];
-        
-        fetch('data/foods.json')
-            .then(response => response.json())
-            .then(data => {
-            meals = data;
-            });
-        
-        document.getElementById('random-btn').addEventListener('click', function () {
-            if (meals.length === 0) return;
 
-            const spinner = document.getElementById('meal-spinner');
-            const mealCard = document.getElementById('meal-card');
+  // Load meals using jQuery
+  $.getJSON('data/foods.json', function(data) {
+    meals = data;
+  });
 
-            
-            mealCard.innerHTML = '';
-            spinner.classList.remove('d-none');
+  // Meal Randomizer Button Listener with jQuery
+  $('#random-btn').on('click', function () {
+    if (meals.length === 0) return;
 
-            setTimeout(() => {
-                const randomMeal = meals[Math.floor(Math.random() * meals.length)];
+    const $spinner = $('#meal-spinner');
+    const $mealCard = $('#meal-card');
 
-                mealCard.innerHTML = `
-                    <div class="card shadow-sm slide-up">
-                        <img src="${randomMeal.image}" class="card-img-top meal-img" alt="${randomMeal.name}"
-                        onerror="this.onerror=null; this.src='images/food-placeholder.png';">
-                        <div class="card-body">
-                            <h5 class="card-title">${randomMeal.name}</h5>
-                            <p class="card-text">${randomMeal.type} • ${randomMeal.category}</p>
-                        </div>
-                    </div>
-                `;
+    $mealCard.empty();
+    $spinner.removeClass('d-none');
 
-                
-                spinner.classList.add('d-none');
-            }, 500);
-        });
+    setTimeout(() => {
+      const randomMeal = meals[Math.floor(Math.random() * meals.length)];
+
+      $mealCard.html(`
+        <div class="card shadow-sm slide-up">
+          <img src="${randomMeal.image}" class="card-img-top meal-img open-modal"
+               alt="${randomMeal.name}" data-bs-toggle="modal" data-bs-target="#imageModal"
+               onerror="this.onerror=null; this.src='images/food-placeholder.png';">
+          <div class="card-body">
+            <h5 class="card-title">${randomMeal.name}</h5>
+            <p class="card-text">${randomMeal.type} • ${randomMeal.category}</p>
+            <!-- <button type="button" class="btn btn-secondary me-2 mb-2">📒 View Details</button> -->
+            <button type="button" id="addMealBtn" class="btn btn-secondary">➕ Add to My Meals</button>
+          </div>
+        </div>
+      `);
+
+      $spinner.addClass('d-none');
+    }, 500);
+  });
+
+  
+
+    // Copies the image details to display on the modal
+    $(document).on('click', '.open-modal', function () {
+        const src = $(this).attr('src');
+        const alt = $(this).attr('alt');
+        $('#modalImage').attr('src', src);
+        $('#modalImage').attr('alt', alt);
+    });
+
+    $(document).on('click', '#addMealBtn', function() {
+        alert("My Meals not yet implemented.");
+    });
 
     </script>
 
