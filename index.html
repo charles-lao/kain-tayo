@@ -45,7 +45,7 @@
                     <a class="nav-link" href="index.html">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="list.html">Meals List</a>
+                    <a class="nav-link" id="list-link" href="list.html">Meals List</a>
                 </li>
             </ul>
         </div>
@@ -136,6 +136,11 @@
 
     $(document).on('click', '#addMealBtn', function() {
         alert("My Meals not yet implemented.");
+    });
+
+    $('#list-link').on('click', function (e) {
+        e.preventDefault();
+        window.location.href = 'list.html';
     });
 
     </script>
