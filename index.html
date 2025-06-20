@@ -71,23 +71,25 @@
     <!-- Main Content -->
     <div class="container text-center mt-4 fade-in">
 
-        <!-- <h3 class="mb-3"> Kain Tayo!</h3> -->
         <p class="lead">Can't decide what to eat?</p>
 
         <button id="random-btn" class="btn btn-primary btn-lg mb-2">
             <span class="bounce-animation">🎲</span> Suggest Meal
         </button>
 
-        <a href="list.html" class="btn btn-secondary btn-lg mb-2 temporary">
+        </br class="mb-0">
+
+        <a href="list.html" class="btn btn-secondary mb-2 temporary ">
             📖 View All Meals
         </a>
 
-        <a href="#" class="btn btn-secondary btn-lg mb-2 temporary">
+        </br class="mb-0">
+
+        <a href="#" class="btn btn-secondary mb-0 temporary viewSavedMealsLink">
             💾 View Saved Meals (<span class="savedMealsCount text-warning">0</span>)
         </a>
 
-
-        <div id="random-meal" class="mt-2">
+        <div id="random-meal">
             <div id="meal-spinner" class="d-none">
                 <div class="spinner-border text-primary" role="status">
                     <span class="sr-only"></span>
@@ -95,6 +97,8 @@
             </div>
             <div id="meal-card"></div>
         </div>
+
+        <div style="height:120px;"></div>
 
     </div>
     
@@ -113,10 +117,10 @@
     <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
         <div id="messageToast" class="toast align-items-center border-0" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="d-flex">
-            <div class="toast-body">
-                Successfully added to your meals!
-            </div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                <div class="toast-body">
+                    Successfully added to your meals!
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
         </div>
     </div>
@@ -167,11 +171,11 @@
                     <div class="card-body">
                         <h5 class="card-title">${randomMeal.name}</h5>
                         <p class="card-text">${randomMeal.type} • ${randomMeal.category}</p>
-                        <button type="button" id="addMealBtn" data-meal-name="${randomMeal.name}" data-meal-id="${randomMeal.id}" class="btn btn-secondary mb-2">➕ Add to My Meals</button>
-                        <a href="list.html" class="btn btn-secondary mb-2 temporary">
+                        <button type="button" id="addMealBtn" data-meal-name="${randomMeal.name}" data-meal-id="${randomMeal.id}" class="btn btn-sm btn-secondary mb-2 me-2">➕ Add to My Meals</button>
+                        <a href="list.html" class="btn btn-sm btn-secondary mb-2 me-2 temporary">
                             📖 View All Meals
                         </a>
-                        <button type="button" class="btn btn-secondary me-2">💾 View Saved Meals  (<span class="savedMealsCount text-warning">${savedMeals.length}</span>)</button>
+                        <button type="button" class="btn btn-sm btn-secondary mb-2 me-2 viewSavedMealsLink">💾 View Saved Meals  (<span class="savedMealsCount text-warning">${savedMeals.length}</span>)</button>
                     </div>
                 </div>
             `);
@@ -199,9 +203,13 @@
         {
             savedMeals.push(mealId);
             localStorage.setItem('savedMeals', JSON.stringify(savedMeals));
-            $('#savedMealsCount').text(savedMeals.length);
+            $('.savedMealsCount').text(savedMeals.length);
             showMessageToast("Success: "+ mealName + " is added to your Saved Meals!", "success");
         }
+    });
+
+    $('.viewSavedMealsLink').on('click', function() {
+        showMessageToast("Saved Meals feature is still in development.");
     });
 
     </script>
