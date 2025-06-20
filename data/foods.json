@@ -439,8 +439,42 @@
         "type": "pork",
         "category": "home-cooked",
         "image": "images/spam-musubi.jpg"
+    },
+    {
+        "id": "64",
+        "name": "Jolly Seafood Restaurant",
+        "type": "seafood, fish, beef, lamb, pork, chicken",
+        "category": "dine-in, takeaway",
+        "image": "images/jolly-seafood-restaurant.jpeg"
+    }, 
+    {
+        "id": "65",
+        "name": "Nilagang Baboy",
+        "type": "pork",
+        "category": "home-cooked",
+        "image": "images/nilagang-baboy.jpg"
+    },
+    {
+        "id": "66",
+        "name": "South Garden Chinese Restaurant",
+        "type": "seafood, fish, beef, lamb, pork, chicken",
+        "category": "dine-in, takeaway",
+        "image": "images/south-garden-chinese-restaurant.avif"
+    }, 
+    {
+        "id": "67",
+        "name": "Wendy's",
+        "type": "chicken, beef",
+        "category": "dine-in, takeaway",
+        "image": "images/wendys.avif"
+    },
+    {
+        "id": "68",
+        "name": "Edgardo's Grill",
+        "type": "chicken, pork",
+        "category": "dine-in, takeaway",
+        "image": "images/edgardos-grill.jpeg"
     }
-    
     
     
     

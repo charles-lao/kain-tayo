@@ -68,10 +68,11 @@
 
         <div class="container text-center mt-4 fade-in">
 
-            <table id="savedMealsTable" class="table table-striped table-hover">
+            <!-- Saved Meals Table -->
+            <table id="savedMealsTable" class="table table-striped table-hover fade-in">
                 <thead>
                     <tr>
-                    <th>Image</th>
+                    <th>🔍</th>
                     <th>Name</th>
                     <th>Action</th>
                     </tr>
@@ -146,9 +147,9 @@
             if (!meal) return;
 
             dataTable.row.add([
-                `<img src="${meal.image}" class="fullscreen-img-modal" width="60" height="40" onerror="this.src='images/food-placeholder.png'">`,
+                `<img src="${meal.image}" class="fullscreen-img-modal" width="60" height="40" onerror="this.src='images/food-placeholder.png'" data-bs-toggle="modal" data-bs-target="#imageModal">`,
                 meal.name,
-                `<button class="btn btn-danger btn-sm" onclick="removeMeal('${meal.id}')">Remove</button>`
+                `<button class="btn btn-danger btn-sm" onclick="removeMeal('${meal.id}')"><i class="bi bi-trash"></i></button>`
             ]);
         });
 

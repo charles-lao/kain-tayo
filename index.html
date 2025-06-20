@@ -174,7 +174,7 @@
                     <div class="card-body">
                         <h5 class="card-title">${randomMeal.name}</h5>
                         <p class="card-text">${randomMeal.type} • ${randomMeal.category}</p>
-                        <button type="button" id="addMealBtn" data-meal-name="${randomMeal.name}" data-meal-id="${randomMeal.id}" class="btn btn-sm btn-secondary mb-2 me-2">➕ Add to My Meals</button>
+                        <button type="button" id="addMealBtn" data-meal-name="${randomMeal.name}" data-meal-id="${randomMeal.id}" class="btn btn-sm btn-secondary mb-2 me-2">➕ Save Meal</button>
                         <a href="list.html" class="btn btn-sm btn-secondary mb-2 me-2 temporary">
                             📖 View All Meals
                         </a>
@@ -209,7 +209,7 @@
             savedMeals.push(mealId);
             localStorage.setItem('savedMeals', JSON.stringify(savedMeals));
             $('.savedMealsCount').text(savedMeals.length);
-            showMessageToast(mealName + " is added to your Saved Meals successfully!", "success");
+            showMessageToast(mealName + " is successfully added to your Saved Meals!", "success");
         }
     });
 
