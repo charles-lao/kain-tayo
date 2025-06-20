@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <!-- Bootstrap 5 and Bootswatch -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.5/dist/lumen/bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="./favicon.ico"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+    <!-- iOS Splash Screens -->
+    <link rel="apple-touch-icon" href="icons/icon.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Kain Tayo">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+    <!-- For Android Chrome -->
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <title>Kain Tayo | Saved Meals</title>
+
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="sticky-top navbar navbar-expand-lg navbar-dark bg-dark p-3">
+        <a class="navbar-brand" href="index.html">🍽️ Kain Tayo</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="list.html">Meals List</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="saved-meals.html">Saved Meals</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+     <div class="container mt-3 fade-in">
+        <div class="d-flex align-items-center justify-content-between mb-4 position-relative">
+            <a href="index.html">
+                <button type="button" class="btn btn-primary">
+                    <i class="bi bi-arrow-left"></i>
+                </button>
+            </a>
+            <h3 class="position-absolute start-50 translate-middle-x m-0">💾 Saved Meals</h3>
+            <div style="width: 40px;"></div>
+        </div>
+
+        <div class="container text-center mt-4 fade-in">
+
+            <table id="savedMealsTable" class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                    <th>Image</th>
+                    <th>Name</th>
+                    <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+
+        </div>
+    </div>
+    
+    <!-- Bootstrap Modal #imageModal -->
+    <div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content bg-dark">
+                <div class="modal-body text-center p-0">
+                    <img id="modalImage" src="" class="img-fluid rounded" alt="Preview">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast container -->
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        <div id="messageToast" class="toast align-items-center border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    Successfully added to your meals!
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Import Global js -->
+    <script src="js/utils.js"></script>
+
+    <!-- Script -->
+    <script>
+    let meals = [];
+    let dataTable;
+
+    // Load meals using jQuery
+    $.getJSON('data/foods.json', function(data) {
+        meals = data;
+
+        dataTable = $('#savedMealsTable').DataTable({
+            paging: false,
+            searching: false,
+            info: false,
+        });
+
+        displaySavedMeals();
+    });
+
+    // Init meals localstorage
+    let savedMeals = JSON.parse(localStorage.getItem('savedMeals') || '[]');
+
+
+    function displaySavedMeals() {
+        dataTable.clear();
+
+        if (savedMeals.length === 0) {
+            dataTable.draw();
+            return;
+        }
+
+        savedMeals.forEach(savedId => {
+            const meal = meals.find(m => m.id == savedId);
+            if (!meal) return;
+
+            dataTable.row.add([
+                `<img src="${meal.image}" class="fullscreen-img-modal" width="60" height="40" onerror="this.src='images/food-placeholder.png'">`,
+                meal.name,
+                `<button class="btn btn-danger btn-sm" onclick="removeMeal('${meal.id}')">Remove</button>`
+            ]);
+        });
+
+        dataTable.draw();
+    }
+
+    function removeMeal(mealId) {
+        // Remove the meal from savedMeals
+        savedMeals = savedMeals.filter(id => id != mealId);  // use != for type safety here
+
+        // Update localStorage
+        localStorage.setItem('savedMeals', JSON.stringify(savedMeals));
+
+        // Refresh the table
+        displaySavedMeals();
+
+        showMessageToast("The meal is deleted from your Saved Meals successfully!", "success");
+    }
+
+    
+
+    </script>
+
+</body>
+</html>

@@ -58,11 +58,14 @@
     
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="index.html">Home</a>
+                <li class="nav-item">
+                    <a class="nav-link active" href="index.html">Home</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="list.html">Meals List</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="saved-meals.html">Saved Meals</a>
                 </li>
             </ul>
         </div>
@@ -85,7 +88,7 @@
 
         </br class="mb-0">
 
-        <a href="#" class="btn btn-secondary mb-0 temporary viewSavedMealsLink">
+        <a href="saved-meals.html" class="btn btn-secondary mb-0 temporary viewSavedMealsLink">
             💾 View Saved Meals (<span class="savedMealsCount text-warning">0</span>)
         </a>
 
@@ -175,7 +178,7 @@
                         <a href="list.html" class="btn btn-sm btn-secondary mb-2 me-2 temporary">
                             📖 View All Meals
                         </a>
-                        <button type="button" class="btn btn-sm btn-secondary mb-2 me-2 viewSavedMealsLink">💾 View Saved Meals  (<span class="savedMealsCount text-warning">${savedMeals.length}</span>)</button>
+                        <a href="saved-meals.html" type="button" class="btn btn-sm btn-secondary mb-2 me-2 viewSavedMealsLink">💾 View Saved Meals  (<span class="savedMealsCount text-warning">${savedMeals.length}</span>)</a>
                     </div>
                 </div>
             `);
@@ -188,6 +191,8 @@
 
     });
 
+    // TODO: Move the localstorage save and remove to js/utils.js 
+    // TODO: Change button to delete button when meal is already added
     // Handles saving of meal to localstorage
     $(document).on('click', '#addMealBtn', function() {
         const mealId = $(this).data('meal-id');
@@ -197,14 +202,14 @@
         // const mealData = getMealById(mealId);  // example function from your JS app
 
         if (savedMeals.includes(mealId)){
-            showMessageToast("Add meal failed: "+ mealName + " already exists on your Saved Meals!", "danger");
+            showMessageToast("Failed: "+ mealName + " already exists in your Saved Meals!", "danger");
         }
         else 
         {
             savedMeals.push(mealId);
             localStorage.setItem('savedMeals', JSON.stringify(savedMeals));
             $('.savedMealsCount').text(savedMeals.length);
-            showMessageToast("Success: "+ mealName + " is added to your Saved Meals!", "success");
+            showMessageToast(mealName + " is added to your Saved Meals successfully!", "success");
         }
     });
 
