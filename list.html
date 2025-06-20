@@ -88,6 +88,9 @@
         </div>
     </div>
 
+    <!-- Import Global js -->
+    <script src="js/utils.js"></script>
+
     <!-- Script -->
     <script>
         $(document).ready(function() {
@@ -96,7 +99,7 @@
                     $('#meal-table tbody').append(`
                     <tr class="fade-in">
                         <td><img src="${meal.image}" alt="${meal.name}" style="width: 60px; height: auto;"
-                            class="open-modal" data-bs-toggle="modal" data-bs-target="#imageModal"
+                            class="fullscreen-img-modal" data-bs-toggle="modal" data-bs-target="#imageModal"
                             onerror="this.onerror=null; this.src='images/food-placeholder.png';"></td>
                         <td>${meal.name}</td>
                         <td>${meal.type}</td>
@@ -111,15 +114,6 @@
                 });
 
             });
-
-            // Opens #imageModal to view a larger image
-            $(document).on('click', '.open-modal', function () {
-                const src = $(this).attr('src');
-                const alt = $(this).attr('alt');
-                $('#modalImage').attr('src', src);
-                $('#modalImage').attr('alt', alt);
-            });
-
             
         });
     </script>
