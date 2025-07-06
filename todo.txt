@@ -1,0 +1,4 @@
+- faded image bottom for the random meal
+- more meals
+- filters for random meal search
+- contact page
