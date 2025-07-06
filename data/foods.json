@@ -337,8 +337,8 @@
     },
     {
         "id": "49",
-        "name": "Pork Bistek",
-        "type": "pork",
+        "name": "Pork Bistek (Bistek Tagalog)",
+        "type": "pork, beef",
         "category": "home-cooked",
         "image": "images/pork-bistek.jpg"
     },
@@ -487,9 +487,63 @@
         "name": "Bopis",
         "type": "pork, beef",
         "category": "home-cooked",
-        "image": "images/sinigang-na-baka.jpg"
+        "image": "images/bopis.webp"
+    },
+    {
+        "id": "71",
+        "name": "Hotdog Sinangag at Itlog (Hotsilog)",
+        "type": "rice, meat",
+        "category": "home-cooked",
+        "image": "images/hotdog-sinangag-at-itlog.jpg"
+    },
+    {
+        "id": "72",
+        "name": "Spam Sinangag at Itlog (Spamsilog)",
+        "type": "rice, meat",
+        "category": "home-cooked",
+        "image": "images/spamsilog.jpg"
+    },
+    {
+        "id": "73",
+        "name": "Tapa Sinangag at Itlog (Tapsilog)",
+        "type": "rice, beef",
+        "category": "home-cooked",
+        "image": "images/tapsilog.jfif"
+    },
+    {
+        "id": "74",
+        "name": "Inihaw na Bangus",
+        "type": "fish, seafood",
+        "category": "home-cooked",
+        "image": "images/inihaw-na-bangus.jfif"
+    },
+    {
+        "id": "75",
+        "name": "Daing na Bangus",
+        "type": "fish, seafood",
+        "category": "home-cooked",
+        "image": "images/daing-na-bangus.jpg"
+    },
+    {
+        "id": "76",
+        "name": "Kwek-kwek",
+        "type": "egg",
+        "category": "home-cooked",
+        "image": "images/kwek-kwek.jpg"
+    },
+    {
+        "id": "77",
+        "name": "Beef or Pork Kaldereta",
+        "type": "beef, pork",
+        "category": "home-cooked",
+        "image": "images/kaldereta.jpg"
+    },
+    {
+        "id": "78",
+        "name": "Bicol Express",
+        "type": "pork",
+        "category": "home-cooked",
+        "image": "images/bicol-express.webp"
     }
-    
-    
     
   ]
