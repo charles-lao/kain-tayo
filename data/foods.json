@@ -474,6 +474,20 @@
         "type": "chicken, pork",
         "category": "dine-in, takeaway",
         "image": "images/edgardos-grill.jpeg"
+    },
+    {
+        "id": "69",
+        "name": "Sinigang na Baka",
+        "type": "beef",
+        "category": "home-cooked",
+        "image": "images/sinigang-na-baka.jpg"
+    },
+    {
+        "id": "70",
+        "name": "Bopis",
+        "type": "pork, beef",
+        "category": "home-cooked",
+        "image": "images/sinigang-na-baka.jpg"
     }
     
     

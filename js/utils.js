@@ -10,13 +10,31 @@ const showMessageToast = (message = null, toastColor = 'primary', toastId = 'mes
         }
     }
 
+    
+
     // Handle color change
     const toastClassList = toastElement.classList;
+
+    // Remove existing text-bg-* class if any
+    toastClassList.forEach(className => {
+        if (className.startsWith('text-bg-')) {
+            toastClassList.remove(className);
+        }
+    });
+
+    // Change to new color
     toastClassList.add(`text-bg-${toastColor}`);
     
 
-    var toast = new bootstrap.Toast(toastElement);
-    toast.show();
+    // Dispose previous toast instance (if any), then recreate it
+    const existingToast = bootstrap.Toast.getInstance(toastElement);
+    if (existingToast) {
+        existingToast.dispose(); // clear event listeners and timers
+    }
+
+    // Now re-init and show
+    const newToast = new bootstrap.Toast(toastElement, { delay: 3000 }); // optional: set consistent delay
+    newToast.show();
 }
 
 

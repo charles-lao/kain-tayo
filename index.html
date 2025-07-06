@@ -138,7 +138,7 @@
     let meals = [];
 
     // Load meals using jQuery
-    $.getJSON('data/foods.json', function(data) {
+    $.getJSON('data/foods.json', { cache: "reload" }, function(data) {
         meals = data;
     });
 
@@ -191,7 +191,7 @@
                     <h5 class="card-title">${randomMeal.name}</h5>
                     <p class="card-text">${randomMeal.type} • ${randomMeal.category}</p>
                     <button type="button" id="addMealBtn" data-meal-name="${randomMeal.name}" data-meal-id="${randomMeal.id}" class="btn btn-sm btn-secondary mb-2 me-2">➕ Save Meal</button>
-                    <a href="list.html" class="btn btn-sm btn-secondary mb-2 me-2 temporary">
+                    <a href="list.html" class="btn btn-sm btn-secondary mb-2 me-2">
                         📖 View All Meals
                     </a>
                     <a href="saved-meals.html" type="button" class="btn btn-sm btn-secondary mb-2 me-2 viewSavedMealsLink">
