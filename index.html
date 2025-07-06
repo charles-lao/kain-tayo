@@ -153,7 +153,6 @@
         
     };
 
-    // Meal Randomizer Button Listener with jQuery
     $('#random-btn').on('click', function () {
         if (meals.length === 0) return;
 
@@ -163,32 +162,46 @@
         $mealCard.empty();
         $spinner.removeClass('d-none');
 
+        // Simulate delay for UX effect
         setTimeout(() => {
             const randomMeal = meals[Math.floor(Math.random() * meals.length)];
 
+            const img = new Image();
+            img.src = randomMeal.image;
+            img.alt = randomMeal.name;
+            img.className = "card-img-top meal-img fullscreen-img-modal";
+            img.setAttribute("data-bs-toggle", "modal");
+            img.setAttribute("data-bs-target", "#imageModal");
+            img.onerror = function () {
+                this.onerror = null;
+                this.src = 'images/food-placeholder.png';
+            };
+
+            img.onload = function () {
+                $spinner.addClass('d-none');
+            };
+
             $mealCard.html(`
                 <div class="card shadow-sm slide-up">
-                    <img src="${randomMeal.image}" class="card-img-top meal-img fullscreen-img-modal"
-                        alt="${randomMeal.name}" data-bs-toggle="modal" data-bs-target="#imageModal"
-                        onerror="this.onerror=null; this.src='images/food-placeholder.png';">
-                    <div class="card-body">
-                        <h5 class="card-title">${randomMeal.name}</h5>
-                        <p class="card-text">${randomMeal.type} • ${randomMeal.category}</p>
-                        <button type="button" id="addMealBtn" data-meal-name="${randomMeal.name}" data-meal-id="${randomMeal.id}" class="btn btn-sm btn-secondary mb-2 me-2">➕ Save Meal</button>
-                        <a href="list.html" class="btn btn-sm btn-secondary mb-2 me-2 temporary">
-                            📖 View All Meals
-                        </a>
-                        <a href="saved-meals.html" type="button" class="btn btn-sm btn-secondary mb-2 me-2 viewSavedMealsLink">💾 View Saved Meals  (<span class="savedMealsCount text-warning">${savedMeals.length}</span>)</a>
-                    </div>
                 </div>
             `);
 
-            $spinner.addClass('d-none');
+            $mealCard.find(".card").append(img).append(`
+                <div class="card-body">
+                    <h5 class="card-title">${randomMeal.name}</h5>
+                    <p class="card-text">${randomMeal.type} • ${randomMeal.category}</p>
+                    <button type="button" id="addMealBtn" data-meal-name="${randomMeal.name}" data-meal-id="${randomMeal.id}" class="btn btn-sm btn-secondary mb-2 me-2">➕ Save Meal</button>
+                    <a href="list.html" class="btn btn-sm btn-secondary mb-2 me-2 temporary">
+                        📖 View All Meals
+                    </a>
+                    <a href="saved-meals.html" type="button" class="btn btn-sm btn-secondary mb-2 me-2 viewSavedMealsLink">
+                        💾 View Saved Meals (<span class="savedMealsCount text-warning">${savedMeals.length}</span>)
+                    </a>
+                </div>
+            `);
 
-        }, 500);
-
-        $('.temporary').remove();
-
+            $('.temporary').remove();
+        }, 300);
     });
 
     // TODO: Move the localstorage save and remove to js/utils.js 
@@ -213,10 +226,21 @@
         }
     });
 
-    $('.viewSavedMealsLink').on('click', function() {
-        showMessageToast("Saved Meals feature is still in development.");
-    });
 
+    </script>
+
+    <!-- PWA Service Worker -->
+    <script>
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker
+        .register('./service-worker.js')
+        .then(registration => {
+            console.log('✅ Service Worker registered with scope:', registration.scope);
+        })
+        .catch(error => {
+            console.error('❌ Service Worker registration failed:', error);
+        });
+    }
     </script>
 
 </body>
