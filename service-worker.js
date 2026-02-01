@@ -1,4 +1,4 @@
-const cacheName = "kain-tayo-cache-v3";
+const cacheName = "kain-tayo-cache-v4";
 
 const assetsToCache = [
   "./",

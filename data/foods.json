@@ -544,6 +544,41 @@
         "type": "pork",
         "category": "home-cooked",
         "image": "images/bicol-express.webp"
+    },
+    {
+        "id": "79",
+        "name": "Pinakbet",
+        "type": "pork, vegetables",
+        "category": "home-cooked",
+        "image": "images/pinakbet.jpg"
+    },
+    {
+        "id": "80",
+        "name": "Chicking",
+        "type": "chicken",
+        "category": "takeaway",
+        "image": "images/chicking.jpg"
+    },
+    {
+        "id": "81",
+        "name": "Lasagna",
+        "type": "beef",
+        "category": "home-cooked",
+        "image": "images/lasagna.webp"
+    },
+    {
+        "id": "82",
+        "name": "Pork Dinuguan",
+        "type": "pork",
+        "category": "home-cooked",
+        "image": "images/pork-dinuguan.jpg"
+    },
+    {
+        "id": "83",
+        "name": "Indomie Mi Goreng",
+        "type": "noodles",
+        "category": "home-cooked",
+        "image": "images/indomie-mi-goreng.jpg"
     }
     
   ]

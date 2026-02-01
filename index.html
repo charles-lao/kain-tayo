@@ -76,6 +76,13 @@
 
         <p class="lead">Can't decide what to eat?</p>
 
+        <div class="mb-3">
+            <label for="homecooked-filter" class="form-check-label">
+                <input type="checkbox" id="homecooked-filter" class="form-check-input" />
+                🏠 Home-cooked only
+            </label>
+        </div>
+
         <button id="random-btn" class="btn btn-primary btn-lg mb-2">
             <span class="bounce-animation">🎲</span> Suggest Meal
         </button>
@@ -149,7 +156,11 @@
         
         if (savedMeals.length > 0) {
             $('.savedMealsCount').text(savedMeals.length);
-        } 
+        }
+
+        // Load filter preference from localStorage
+        const filterPreference = localStorage.getItem('homecookedFilter') === 'true';
+        $('#homecooked-filter').prop('checked', filterPreference);
         
     };
 
@@ -164,7 +175,35 @@
 
         // Simulate delay for UX effect
         setTimeout(() => {
-            const randomMeal = meals[Math.floor(Math.random() * meals.length)];
+            // Apply filter if checkbox is checked
+            const isFilterEnabled = $('#homecooked-filter').is(':checked');
+            let filteredMeals = meals;
+
+            if (isFilterEnabled) {
+                filteredMeals = meals.filter(meal => meal.category.includes('home-cooked'));
+            }
+
+            if (filteredMeals.length === 0) {
+                $spinner.addClass('d-none');
+                $mealCard.html('<p class="text-muted">No meals found with the selected filter.</p>');
+                return;
+            }
+
+            // Get last suggested meal ID to avoid showing same meal twice
+            const lastSuggestedId = localStorage.getItem('lastSuggestedMealId');
+            
+            // Filter out the last suggested meal
+            let availableMeals = filteredMeals.filter(meal => meal.id != lastSuggestedId);
+            
+            // If all meals are filtered out, use all meals (in case user kept clicking)
+            if (availableMeals.length === 0) {
+                availableMeals = filteredMeals;
+            }
+
+            const randomMeal = availableMeals[Math.floor(Math.random() * availableMeals.length)];
+            
+            // Save this meal ID as the last suggested
+            localStorage.setItem('lastSuggestedMealId', randomMeal.id);
 
             const img = new Image();
             img.src = randomMeal.image;
@@ -202,6 +241,11 @@
 
             $('.temporary').remove();
         }, 300);
+    });
+
+    // Save filter preference to localStorage when checkbox changes
+    $('#homecooked-filter').on('change', function() {
+        localStorage.setItem('homecookedFilter', $(this).is(':checked'));
     });
 
     // TODO: Move the localstorage save and remove to js/utils.js 
