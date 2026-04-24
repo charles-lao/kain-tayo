@@ -87,13 +87,13 @@
             <span class="bounce-animation">🎲</span> Suggest Meal
         </button>
 
-        </br class="mb-0">
+        <br class="mb-0">
 
         <a href="list.html" class="btn btn-secondary mb-2 temporary ">
             📖 View All Meals
         </a>
 
-        </br class="mb-0">
+        <br class="mb-0">
 
         <a href="saved-meals.html" class="btn btn-secondary mb-2 temporary viewSavedMealsLink">
             💾 View Saved Meals (<span class="savedMealsCount text-warning">0</span>)
@@ -144,25 +144,16 @@
     <script>
     let meals = [];
 
-    // Load meals using jQuery
-    $.getJSON('data/foods.json', { cache: "reload" }, function(data) {
+    // Load meals
+    MealDataService.getMeals().then(data => {
         meals = data;
     });
 
-    // Init meals localstorage
-    let savedMeals = JSON.parse(localStorage.getItem('savedMeals') || '[]');
-
-    window.onload = function() {
-        
-        if (savedMeals.length > 0) {
-            $('.savedMealsCount').text(savedMeals.length);
-        }
-
+    $(document).ready(function() {
         // Load filter preference from localStorage
         const filterPreference = localStorage.getItem('homecookedFilter') === 'true';
         $('#homecooked-filter').prop('checked', filterPreference);
-        
-    };
+    });
 
     $('#random-btn').on('click', function () {
         if (meals.length === 0) return;
@@ -220,26 +211,36 @@
                 $spinner.addClass('d-none');
             };
 
+            const isSaved = MealManager.isMealSaved(randomMeal.id);
+            const saveBtnText = isSaved ? '🗑️ Remove' : '➕ Save Meal';
+            const saveBtnClass = isSaved ? 'btn-danger' : 'btn-secondary';
+
             $mealCard.html(`
                 <div class="card shadow-sm slide-up">
+                    <div class="card-body">
+                        <h5 class="card-title">${randomMeal.name}</h5>
+                        <p class="card-text">${randomMeal.type} • ${randomMeal.category}</p>
+                        <button type="button" id="addMealBtn" 
+                                data-meal-name="${randomMeal.name}" 
+                                data-meal-id="${randomMeal.id}" 
+                                class="btn btn-sm ${saveBtnClass} mb-2 me-2">
+                            ${saveBtnText}
+                        </button>
+                        <a href="list.html" class="btn btn-sm btn-secondary mb-2 me-2">
+                            📖 View All Meals
+                        </a>
+                        <a href="saved-meals.html" type="button" class="btn btn-sm btn-secondary mb-2 me-2 viewSavedMealsLink">
+                            💾 View Saved Meals (<span class="savedMealsCount text-warning">0</span>)
+                        </a>
+                    </div>
                 </div>
             `);
-
-            $mealCard.find(".card").append(img).append(`
-                <div class="card-body">
-                    <h5 class="card-title">${randomMeal.name}</h5>
-                    <p class="card-text">${randomMeal.type} • ${randomMeal.category}</p>
-                    <button type="button" id="addMealBtn" data-meal-name="${randomMeal.name}" data-meal-id="${randomMeal.id}" class="btn btn-sm btn-secondary mb-2 me-2">➕ Save Meal</button>
-                    <a href="list.html" class="btn btn-sm btn-secondary mb-2 me-2">
-                        📖 View All Meals
-                    </a>
-                    <a href="saved-meals.html" type="button" class="btn btn-sm btn-secondary mb-2 me-2 viewSavedMealsLink">
-                        💾 View Saved Meals (<span class="savedMealsCount text-warning">${savedMeals.length}</span>)
-                    </a>
-                </div>
-            `);
+            
+            // Prepend image to card
+            $mealCard.find(".card").prepend(img);
 
             $('.temporary').remove();
+            MealManager.updateBadgeCount();
         }, 300);
     });
 
@@ -248,25 +249,23 @@
         localStorage.setItem('homecookedFilter', $(this).is(':checked'));
     });
 
-    // TODO: Move the localstorage save and remove to js/utils.js 
-    // TODO: Change button to delete button when meal is already added
-    // Handles saving of meal to localstorage
+    // Handles saving/removing of meal to localstorage
     $(document).on('click', '#addMealBtn', function() {
-        const mealId = $(this).data('meal-id');
-        const mealName = $(this).data('meal-name');
+        const $btn = $(this);
+        const mealId = $btn.data('meal-id');
+        const mealName = $btn.data('meal-name');
 
-        // can retrieve full meal details from memory or another source
-        // const mealData = getMealById(mealId);  // example function from your JS app
-
-        if (savedMeals.includes(mealId)){
-            showMessageToast("Failed: "+ mealName + " already exists in your Saved Meals!", "danger");
-        }
-        else 
-        {
-            savedMeals.push(mealId);
-            localStorage.setItem('savedMeals', JSON.stringify(savedMeals));
-            $('.savedMealsCount').text(savedMeals.length);
-            showMessageToast(mealName + " is successfully added to your Saved Meals!", "success");
+        if (MealManager.isMealSaved(mealId)) {
+            // Remove logic
+            MealManager.removeMeal(mealId);
+            $btn.text('➕ Save Meal').removeClass('btn-danger').addClass('btn-secondary');
+            showMessageToast(mealName + " was removed from your Saved Meals.", "success");
+        } else {
+            // Add logic
+            if (MealManager.addMeal(mealId)) {
+                $btn.text('🗑️ Remove').removeClass('btn-secondary').addClass('btn-danger');
+                showMessageToast(mealName + " is successfully added to your Saved Meals!", "success");
+            }
         }
     });
 

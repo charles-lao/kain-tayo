@@ -63,7 +63,9 @@
                 </button>
             </a>
             <h3 class="position-absolute start-50 translate-middle-x m-0">💾 Saved Meals</h3>
-            <div style="width: 40px;"></div>
+            <button type="button" id="clearAllBtn" class="btn btn-outline-danger btn-sm">
+                <i class="bi bi-trash-fill"></i> Clear
+            </button>
         </div>
 
         <div class="container text-center mt-4 fade-in">
@@ -117,33 +119,37 @@
     let meals = [];
     let dataTable;
 
-    // Load meals using jQuery
-    $.getJSON('data/foods.json', function(data) {
-        meals = data;
+    $(document).ready(function() {
+        MealDataService.getMeals().then(data => {
+            meals = data;
 
-        dataTable = $('#savedMealsTable').DataTable({
-            paging: false,
-            searching: false,
-            info: false,
+            dataTable = $('#savedMealsTable').DataTable({
+                paging: false,
+                searching: false,
+                info: false,
+                language: {
+                    emptyTable: "You haven't saved any meals yet. <a href='index.html'>Go get a suggestion!</a>"
+                }
+            });
+
+            displaySavedMeals();
         });
-
-        displaySavedMeals();
     });
-
-    // Init meals localstorage
-    let savedMeals = JSON.parse(localStorage.getItem('savedMeals') || '[]');
-
 
     function displaySavedMeals() {
         dataTable.clear();
+        const savedIds = MealManager.getSavedMealIds();
 
-        if (savedMeals.length === 0) {
+        if (savedIds.length === 0) {
             dataTable.draw();
+            $('#clearAllBtn').hide();
             return;
         }
 
-        savedMeals.forEach(savedId => {
-            const meal = meals.find(m => m.id == savedId);
+        $('#clearAllBtn').show();
+
+        savedIds.forEach(savedId => {
+            const meal = meals.find(m => m.id.toString() === savedId.toString());
             if (!meal) return;
 
             dataTable.row.add([
@@ -157,19 +163,18 @@
     }
 
     function removeMeal(mealId) {
-        // Remove the meal from savedMeals
-        savedMeals = savedMeals.filter(id => id != mealId);  // use != for type safety here
-
-        // Update localStorage
-        localStorage.setItem('savedMeals', JSON.stringify(savedMeals));
-
-        // Refresh the table
+        MealManager.removeMeal(mealId);
         displaySavedMeals();
-
-        showMessageToast("The meal is deleted from your Saved Meals successfully!", "success");
+        showMessageToast("The meal was removed from your Saved Meals.", "success");
     }
 
-    
+    $('#clearAllBtn').on('click', function() {
+        if (confirm('Are you sure you want to clear all saved meals?')) {
+            MealManager.clearAll();
+            displaySavedMeals();
+            showMessageToast("All saved meals have been cleared.", "success");
+        }
+    });
 
     </script>
 

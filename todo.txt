@@ -1,4 +1,14 @@
-- faded image bottom for the random meal
-- more meals
-- filters for random meal search
-- contact page
+### TODO
+- [ ] Faded image bottom for the random meal card
+- [ ] More meals in data/foods.json
+- [ ] Add more filter categories (e.g., meat-only, veg-only, rice-only)
+- [ ] Create a Contact/About page
+
+### Completed
+- [x] Centralized MealManager and MealDataService for better logic sharing
+- [x] Improved Home-cooked filter UI/UX
+- [x] Improved "Save Meal" button state (changes to "Already Saved")
+- [x] Added "Clear All" saved meals feature
+- [x] Enhanced Service Worker with dynamic image caching and cache-first strategy
+- [x] Refined UI styling with hover effects, transitions, and cleaner cards
+- [x] Fixed several HTML/UX inconsistencies (incorrect tags, redundant links)

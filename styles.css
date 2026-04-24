@@ -1,13 +1,48 @@
-img {
-    cursor: pointer;
+/* General Styles */
+body {
+    background-color: #f8f9fa;
+    transition: background-color 0.3s ease;
 }
 
+img {
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+img:hover {
+    transform: scale(1.02);
+}
+
+/* Navbar Enhancements */
+.navbar {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Card Enhancements */
+.card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15) !important;
+}
+
+.meal-img {
+    height: 300px;
+    object-fit: cover;
+}
+
+/* Animations */
 .fade-in {
     opacity: 0;
-    animation: fadeIn 0.5s ease-in forwards;
-    }
+    animation: fadeIn 0.6s ease-in forwards;
+}
 
-    @keyframes fadeIn {
+@keyframes fadeIn {
     to {
         opacity: 1;
     }
@@ -17,11 +52,36 @@ img {
     transform: translateY(20px);
     opacity: 0;
     animation: slideUp 0.5s ease-out forwards;
-    }
+}
 
-    @keyframes slideUp {
+@keyframes slideUp {
     to {
         transform: translateY(0);
         opacity: 1;
     }
+}
+
+/* Button & Badge Effects */
+.btn {
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.btn:active {
+    transform: scale(0.95);
+}
+
+.savedMealsCount {
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+/* DataTable Customization */
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    padding: 0.2rem 0.6rem !important;
+}
+
+.table {
+    border-radius: 8px;
+    overflow: hidden;
 }

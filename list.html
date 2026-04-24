@@ -112,14 +112,15 @@
 
     <!-- Script -->
     <script>
-
-        // Init meals localstorage
-        let savedMeals = JSON.parse(localStorage.getItem('savedMeals') || '[]');
-
         $(document).ready(function() {
-            $.getJSON('data/foods.json', { cache: "reload" }, function(data) {
+            MealDataService.getMeals().then(data => {
+                const $tbody = $('#meal-table tbody');
                 data.forEach(function(meal) {
-                    $('#meal-table tbody').append(`
+                    const isSaved = MealManager.isMealSaved(meal.id);
+                    const btnClass = isSaved ? 'btn-danger' : 'btn-secondary';
+                    const btnText = isSaved ? '🗑️ Remove' : '💾 Save';
+                    
+                    $tbody.append(`
                     <tr class="fade-in">
                         <td><img src="${meal.image}" alt="${meal.name}" style="width: 60px; height: auto;"
                             class="fullscreen-img-modal" data-bs-toggle="modal" data-bs-target="#imageModal"
@@ -127,39 +128,42 @@
                         <td>${meal.name}</td>
                         <td>${meal.type}</td>
                         <td>${meal.category}</td>
-                        <td><button type="button" data-meal-name="${meal.name}" data-meal-id="${meal.id}" class="btn btn-sm btn-secondary mb-2 me-2 addMealBtn">💾</button></td>
+                        <td>
+                            <button type="button" 
+                                    data-meal-name="${meal.name}" 
+                                    data-meal-id="${meal.id}" 
+                                    class="btn btn-sm ${btnClass} addMealBtn">
+                                ${btnText}
+                            </button>
+                        </td>
                     </tr>
                     `);
                 });
-
-                
 
                 $('#meal-table').DataTable({
                     lengthChange: false,
                     order:[1, 'asc']
                 });
-
             });
 
             $(document).on('click', '.addMealBtn', function() {
-                const mealId = $(this).data('meal-id');
-                const mealName = $(this).data('meal-name');
+                const $btn = $(this);
+                const mealId = $btn.data('meal-id');
+                const mealName = $btn.data('meal-name');
 
-                // can retrieve full meal details from memory or another source
-                // const mealData = getMealById(mealId);  // example function from your JS app
-
-                if (savedMeals.includes(mealId)){
-                    showMessageToast("Failed: "+ mealName + " already exists in your Saved Meals!", "danger");
-                }
-                else 
-                {
-                    savedMeals.push(mealId);
-                    localStorage.setItem('savedMeals', JSON.stringify(savedMeals));
-                    $('.savedMealsCount').text(savedMeals.length);
-                    showMessageToast(mealName + " is successfully added to your Saved Meals!", "success");
+                if (MealManager.isMealSaved(mealId)) {
+                    // Remove logic
+                    MealManager.removeMeal(mealId);
+                    $btn.text('💾 Save').removeClass('btn-danger').addClass('btn-secondary');
+                    showMessageToast(mealName + " was removed from your Saved Meals.", "success");
+                } else {
+                    // Add logic
+                    if (MealManager.addMeal(mealId)) {
+                        $btn.text('🗑️ Remove').removeClass('btn-secondary').addClass('btn-danger');
+                        showMessageToast(mealName + " is successfully added to your Saved Meals!", "success");
+                    }
                 }
             });
-            
         });
     </script>
     
