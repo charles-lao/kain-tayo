@@ -158,7 +158,56 @@ $(document).on('click', '.fullscreen-img-modal', function () {
     $('#modalImage').attr('alt', alt);
 });
 
-// Auto-update badge count on page load
+/**
+ * ThemeManager handles dark/light mode switching and system preference detection.
+ */
+const ThemeManager = {
+    _storageKey: 'theme-preference',
+
+    init: function() {
+        const savedTheme = localStorage.getItem(this._storageKey);
+        const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        const theme = savedTheme || systemTheme;
+        
+        this.setTheme(theme);
+
+        // Listen for system theme changes
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+            if (!localStorage.getItem(this._storageKey)) {
+                this.setTheme(e.matches ? 'dark' : 'light');
+            }
+        });
+    },
+
+    setTheme: function(theme) {
+        document.documentElement.setAttribute('data-bs-theme', theme);
+        this.updateToggleButton(theme);
+    },
+
+    toggle: function() {
+        const currentTheme = document.documentElement.getAttribute('data-bs-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        
+        this.setTheme(newTheme);
+        localStorage.setItem(this._storageKey, newTheme);
+    },
+
+    updateToggleButton: function(theme) {
+        const $icon = $('#theme-toggle i');
+        if (theme === 'dark') {
+            $icon.removeClass('bi-moon-stars-fill').addClass('bi-sun-fill');
+        } else {
+            $icon.removeClass('bi-sun-fill').addClass('bi-moon-stars-fill');
+        }
+    }
+};
+
+// Auto-update badge count and init theme on page load
 $(document).ready(function() {
     MealManager.updateBadgeCount();
+     ThemeManager.init();
+});
+
+$(document).on('click', '#theme-toggle', function() {
+    ThemeManager.toggle();
 });
