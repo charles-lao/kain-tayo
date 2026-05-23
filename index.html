@@ -202,64 +202,65 @@
             img.className = "card-img-top meal-img fullscreen-img-modal";
             img.setAttribute("data-bs-toggle", "modal");
             img.setAttribute("data-bs-target", "#imageModal");
+
+            img.onload = function () {
+                $spinner.addClass('d-none');
+
+                const isSaved = MealManager.isMealSaved(randomMeal.id);
+                const saveBtnText = isSaved ? '🗑️ Remove' : '➕ Save Meal';
+                const saveBtnClass = isSaved ? 'btn-danger' : 'btn-secondary';
+
+                const categories = randomMeal.category.split(',').map(c => c.trim());
+                const types = randomMeal.type.split(',').map(t => t.trim());
+                
+                let categoryBadges = categories.map(c => {
+                    let badgeClass = 'bg-success';
+                    if (c === 'takeaway') badgeClass = 'bg-warning text-dark';
+                    if (c === 'dine-in') badgeClass = 'bg-info text-dark';
+                    return `<span class="badge ${badgeClass} me-1 mb-1">${c}</span>`;
+                }).join('');
+
+                let typeBadges = types.map(t => `<span class="badge bg-secondary me-1 mb-1">${t}</span>`).join('');
+
+                $mealCard.html(`
+                    <div class="card shadow-sm slide-up mx-auto" style="max-width: 500px;">
+                        <div class="card-body">
+                            <h5 class="card-title mb-2">${randomMeal.name}</h5>
+                            <div class="mb-3">
+                                ${categoryBadges}
+                                ${typeBadges}
+                            </div>
+                            <div class="d-grid gap-2">
+                                <button type="button" id="addMealBtn" 
+                                        data-meal-name="${randomMeal.name}" 
+                                        data-meal-id="${randomMeal.id}" 
+                                        class="btn ${saveBtnClass} btn-lg py-3">
+                                    ${saveBtnText}
+                                </button>
+                                <div class="d-flex gap-2">
+                                    <a href="list.html" class="btn btn-light btn-lg flex-grow-1">
+                                        📖 All Meals
+                                    </a>
+                                    <a href="saved-meals.html" class="btn btn-light btn-lg flex-grow-1 viewSavedMealsLink">
+                                        💾 Saved (<span class="savedMealsCount text-warning">0</span>)
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `);
+                
+                // Prepend image to card
+                $mealCard.find(".card").prepend(img);
+
+                $('.temporary').remove();
+                MealManager.updateBadgeCount();
+            };
+
             img.onerror = function () {
                 this.onerror = null;
                 this.src = 'images/food-placeholder.png';
             };
-
-            img.onload = function () {
-                $spinner.addClass('d-none');
-            };
-
-            const isSaved = MealManager.isMealSaved(randomMeal.id);
-            const saveBtnText = isSaved ? '🗑️ Remove' : '➕ Save Meal';
-            const saveBtnClass = isSaved ? 'btn-danger' : 'btn-secondary';
-
-            const categories = randomMeal.category.split(',').map(c => c.trim());
-            const types = randomMeal.type.split(',').map(t => t.trim());
-            
-            let categoryBadges = categories.map(c => {
-                let badgeClass = 'bg-success';
-                if (c === 'takeaway') badgeClass = 'bg-warning text-dark';
-                if (c === 'dine-in') badgeClass = 'bg-info text-dark';
-                return `<span class="badge ${badgeClass} me-1 mb-1">${c}</span>`;
-            }).join('');
-
-            let typeBadges = types.map(t => `<span class="badge bg-secondary me-1 mb-1">${t}</span>`).join('');
-
-            $mealCard.html(`
-                <div class="card shadow-sm slide-up mx-auto" style="max-width: 500px;">
-                    <div class="card-body">
-                        <h5 class="card-title mb-2">${randomMeal.name}</h5>
-                        <div class="mb-3">
-                            ${categoryBadges}
-                            ${typeBadges}
-                        </div>
-                        <div class="d-grid gap-2">
-                            <button type="button" id="addMealBtn" 
-                                    data-meal-name="${randomMeal.name}" 
-                                    data-meal-id="${randomMeal.id}" 
-                                    class="btn ${saveBtnClass} btn-lg py-3">
-                                ${saveBtnText}
-                            </button>
-                            <div class="d-flex gap-2">
-                                <a href="list.html" class="btn btn-light btn-lg flex-grow-1">
-                                    📖 All Meals
-                                </a>
-                                <a href="saved-meals.html" class="btn btn-light btn-lg flex-grow-1 viewSavedMealsLink">
-                                    💾 Saved (<span class="savedMealsCount text-warning">0</span>)
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `);
-            
-            // Prepend image to card
-            $mealCard.find(".card").prepend(img);
-
-            $('.temporary').remove();
-            MealManager.updateBadgeCount();
         }, 300);
     });
 
