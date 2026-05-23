@@ -111,6 +111,26 @@ const MealDataService = {
     getMealById: async function(id) {
         const meals = await this.getMeals();
         return meals.find(m => m.id.toString() === id.toString()) || null;
+    },
+
+    /**
+     * Dynamically extracts unique categories and types from the meal data.
+     * @returns {Promise<Object>} Object containing arrays of unique types and categories.
+     */
+    getFilterOptions: async function() {
+        const meals = await this.getMeals();
+        const categories = new Set();
+        const types = new Set();
+
+        meals.forEach(meal => {
+            meal.category.split(',').forEach(c => categories.add(c.trim()));
+            meal.type.split(',').forEach(t => types.add(t.trim()));
+        });
+
+        return {
+            categories: Array.from(categories).sort(),
+            types: Array.from(types).sort()
+        };
     }
 };
 

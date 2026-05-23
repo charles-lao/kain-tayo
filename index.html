@@ -83,14 +83,35 @@
 
         <p class="lead">Can't decide what to eat?</p>
 
-        <div class="mb-3">
-            <label for="homecooked-filter" class="form-check-label">
-                <input type="checkbox" id="homecooked-filter" class="form-check-input" />
-                🏠 Home-cooked only
-            </label>
+        <!-- Filter UI -->
+        <div id="filter-btn-container" class="mb-3">
+            <button class="btn btn-outline-secondary btn-sm rounded-pill px-3" type="button" data-bs-toggle="collapse" data-bs-target="#filter-collapse">
+                <i class="bi bi-sliders2-vertical me-1"></i> Filters
+                <span id="filter-active-dot" class="filter-badge-dot d-none"></span>
+            </button>
         </div>
 
-        <button id="random-btn" class="btn btn-primary btn-lg mb-2">
+        <div class="collapse" id="filter-collapse">
+            <div class="filter-section text-start mx-auto mb-4 position-relative" style="max-width: 500px;">
+                <button type="button" id="close-filter-btn" class="btn btn-link position-absolute top-0 end-0 d-flex align-items-center justify-content-center text-decoration-none" aria-label="Close" style="width: 48px; height: 48px; z-index: 20;">
+                    <i class="bi bi-x-lg" style="font-size: 1.2rem; color: var(--text-color); opacity: 0.7; pointer-events: none;"></i>
+                </button>
+                <div class="mb-3">
+                    <span class="filter-label">Categories</span>
+                    <div id="category-chips" class="chip-group">
+                        <!-- Chips will be injected here -->
+                    </div>
+                </div>
+                <div>
+                    <span class="filter-label">Meal Types</span>
+                    <div id="type-chips" class="chip-group">
+                        <!-- Chips will be injected here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button id="random-btn" class="btn btn-primary btn-lg mb-4">
             <span class="bounce-animation">🎲</span> Suggest Meal
         </button>
 
@@ -150,16 +171,76 @@
     <!-- Script -->
     <script>
     let meals = [];
+    let activeFilters = {
+        categories: [],
+        types: []
+    };
 
-    // Load meals
+    // Load meals and initialize filters
     MealDataService.getMeals().then(data => {
         meals = data;
+        initFilters();
     });
 
-    $(document).ready(function() {
-        // Load filter preference from localStorage
-        const filterPreference = localStorage.getItem('homecookedFilter') === 'true';
-        $('#homecooked-filter').prop('checked', filterPreference);
+    async function initFilters() {
+        const options = await MealDataService.getFilterOptions();
+        
+        // Load from localStorage if exists
+        const savedFilters = localStorage.getItem('activeFilters');
+        if (savedFilters) {
+            activeFilters = JSON.parse(savedFilters);
+            updateFilterBadge();
+        }
+
+        renderChips('category-chips', options.categories, 'categories');
+        renderChips('type-chips', options.types, 'types');
+    }
+
+    function renderChips(containerId, options, groupKey) {
+        const $container = $(`#${containerId}`);
+        options.forEach(option => {
+            const isActive = activeFilters[groupKey].includes(option);
+            $container.append(`
+                <div class="filter-chip ${isActive ? 'active' : ''}" data-group="${groupKey}" data-value="${option}">
+                    ${option}
+                </div>
+            `);
+        });
+    }
+
+    function updateFilterBadge() {
+        const totalActive = activeFilters.categories.length + activeFilters.types.length;
+        if (totalActive > 0) {
+            $('#filter-active-dot').removeClass('d-none');
+        } else {
+            $('#filter-active-dot').addClass('d-none');
+        }
+    }
+
+    // Chip click handler
+    $(document).on('click', '.filter-chip', function() {
+        const $chip = $(this);
+        const group = $chip.data('group');
+        const value = $chip.data('value');
+
+        if ($chip.hasClass('active')) {
+            $chip.removeClass('active');
+            activeFilters[group] = activeFilters[group].filter(v => v !== value);
+        } else {
+            $chip.addClass('active');
+            activeFilters[group].push(value);
+        }
+
+        localStorage.setItem('activeFilters', JSON.stringify(activeFilters));
+        updateFilterBadge();
+    });
+
+    $(document).on('click', '#close-filter-btn', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const filterCollapse = document.getElementById('filter-collapse');
+        const bsCollapse = bootstrap.Collapse.getInstance(filterCollapse) || new bootstrap.Collapse(filterCollapse);
+        bsCollapse.hide();
     });
 
     $('#random-btn').on('click', function () {
@@ -173,17 +254,27 @@
 
         // Simulate delay for UX effect
         setTimeout(() => {
-            // Apply filter if checkbox is checked
-            const isFilterEnabled = $('#homecooked-filter').is(':checked');
             let filteredMeals = meals;
 
-            if (isFilterEnabled) {
-                filteredMeals = meals.filter(meal => meal.category.includes('home-cooked'));
+            // Apply filters if any are active
+            if (activeFilters.categories.length > 0 || activeFilters.types.length > 0) {
+                filteredMeals = meals.filter(meal => {
+                    const mealCats = meal.category.split(',').map(c => c.trim());
+                    const mealTypes = meal.type.split(',').map(t => t.trim());
+
+                    const categoryMatch = activeFilters.categories.length === 0 || 
+                                        activeFilters.categories.some(c => mealCats.includes(c));
+                    
+                    const typeMatch = activeFilters.types.length === 0 || 
+                                    activeFilters.types.some(t => mealTypes.includes(t));
+
+                    return categoryMatch && typeMatch;
+                });
             }
 
             if (filteredMeals.length === 0) {
                 $spinner.addClass('d-none');
-                $mealCard.html('<p class="text-muted">No meals found with the selected filter.</p>');
+                $mealCard.html('<p class="text-muted">No meals found with the selected filters.</p>');
                 return;
             }
 
@@ -193,7 +284,7 @@
             // Filter out the last suggested meal
             let availableMeals = filteredMeals.filter(meal => meal.id != lastSuggestedId);
             
-            // If all meals are filtered out, use all meals (in case user kept clicking)
+            // If all meals are filtered out, use all meals
             if (availableMeals.length === 0) {
                 availableMeals = filteredMeals;
             }
@@ -269,11 +360,6 @@
                 this.src = 'images/food-placeholder.png';
             };
         }, 300);
-    });
-
-    // Save filter preference to localStorage when checkbox changes
-    $('#homecooked-filter').on('change', function() {
-        localStorage.setItem('homecookedFilter', $(this).is(':checked'));
     });
 
     // Handles saving/removing of meal to localstorage
