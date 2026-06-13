@@ -1,4 +1,4 @@
-const cacheName = "kain-tayo-cache-v5";
+const cacheName = "kain-tayo-cache-v6";
 const staticAssets = [
   "./",
   "./index.html",
@@ -58,6 +58,13 @@ self.addEventListener("fetch", event => {
   // Default strategy: Network First
   else {
     event.respondWith(networkFirst(req));
+  }
+});
+
+// Listen for skip-waiting message from the page
+self.addEventListener("message", event => {
+  if (event.data && event.data.type === "SKIP_WAITING") {
+    self.skipWaiting();
   }
 });
 
