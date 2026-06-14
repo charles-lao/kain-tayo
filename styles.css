@@ -226,3 +226,45 @@ img:hover {
 .filter-section .btn-close {
     z-index: 10;
 }
+
+/* Install Banner */
+.install-banner {
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+    background: #0d6efd;
+    color: #fff;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    font-size: 0.85rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+[data-bs-theme="dark"] .install-banner {
+    background: #0a58ca;
+}
+
+.install-banner-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.install-banner #install-btn {
+    border-radius: 20px;
+    padding: 4px 16px;
+}
+
+.install-banner #dismiss-install-btn {
+    font-size: 0.8rem;
+    opacity: 0.8;
+}
+
+.install-banner #dismiss-install-btn:hover {
+    opacity: 1;
+}
