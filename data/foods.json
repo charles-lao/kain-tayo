@@ -579,6 +579,26 @@
         "type": "noodles",
         "category": "home-cooked",
         "image": "images/indomie-mi-goreng.jpg"
+    },
+    {
+        "id": "84",
+        "name": "Tuyo (Dried Salted Fish)",
+        "type": "fish",
+        "category": "home-cooked",
+        "image": "images/tuyo.jpg"
+    },
+    {
+        "id": "85",
+        "name": "Miswa Patola",
+        "type": "vegetables, noodles",
+        "category": "home-cooked",
+        "image": "images/miswa-patola.webp"
+    },
+    {
+        "id": "86",
+        "name": "Pork Batchoy",
+        "type": "pork, noodles",
+        "category": "home-cooked",
+        "image": "images/pork-batchoy.jpg"
     }
-    
   ]

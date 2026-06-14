@@ -1,12 +1,16 @@
-const cacheName = "kain-tayo-cache-v6";
-const staticAssets = [
+const BUILD_DATE = '2026-06-14'; // ← UPDATE THIS TO TODAY'S DATE ON EACH DEPLOY
+const cacheName = `kain-tayo-cache-${BUILD_DATE}`;
+
+const htmlPages = [
   "./",
   "./index.html",
   "./list.html",
-  "./saved-meals.html",
+  "./saved-meals.html"
+];
+
+const preCacheAssets = [
   "./styles.css",
   "./js/utils.js",
-  "./data/foods.json",
   "./icons/icon.png",
   "./icons/icon-192.png",
   "./icons/icon-512.png",
@@ -21,6 +25,12 @@ const staticAssets = [
   "https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js",
   "images/food-placeholder.png"
 ];
+
+const networkFirstAssets = [
+  "./data/foods.json"
+];
+
+const staticAssets = [...htmlPages, ...preCacheAssets, ...networkFirstAssets];
 
 // Install event – cache static assets
 self.addEventListener("install", event => {
@@ -49,8 +59,16 @@ self.addEventListener("fetch", event => {
   const req = event.request;
   const url = new URL(req.url);
 
-  // Strategy for static assets: Cache First
-  if (staticAssets.some(asset => req.url.includes(asset.replace('./', '')))) {
+  // Strategy for HTML pages: Network First (fresh content when online, fallback to cache)
+  if (htmlPages.some(page => req.url.includes(page.replace('./', '')))) {
+    event.respondWith(networkFirst(req));
+  } 
+  // Strategy for data/assets that should always be fresh: Network First
+  else if (networkFirstAssets.some(asset => req.url.includes(asset.replace('./', '')))) {
+    event.respondWith(networkFirst(req));
+  } 
+  // Strategy for other static assets: Cache First
+  else if (preCacheAssets.some(asset => req.url.includes(asset.replace('./', '')))) {
     event.respondWith(cacheFirst(req));
   } 
   // Strategy for images: Cache with Network Fallback & Dynamic Caching
