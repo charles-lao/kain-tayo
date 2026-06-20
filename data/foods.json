@@ -600,5 +600,19 @@
         "type": "pork, noodles",
         "category": "home-cooked",
         "image": "images/pork-batchoy.jpg"
+    },
+    {
+        "id": "87",
+        "name": "Kanto Breaded Pork Chop",
+        "type": "pork",
+        "category": "home-cooked",
+        "image": "images/breaded-pork-chop.webp"
+    },
+    {
+        "id": "88",
+        "name": "Crispy Okoy (Fritter)",
+        "type": "vegetable",
+        "category": "home-cooked",
+        "image": "images/okoy.png"
     }
   ]

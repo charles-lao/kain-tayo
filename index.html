@@ -81,18 +81,21 @@
     <!-- Main Content -->
     <div class="container text-center mt-4 fade-in">
 
-        <p class="lead">Can't decide what to eat?</p>
+        <p id="tagline" class="lead">Can't decide what to eat?</p>
 
-        <!-- Filter UI -->
-        <div id="filter-btn-container" class="mb-3">
-            <button class="btn btn-outline-secondary btn-sm rounded-pill px-3" type="button" data-bs-toggle="collapse" data-bs-target="#filter-collapse">
-                <i class="bi bi-sliders2-vertical me-1"></i> Filters
+        <div class="d-flex justify-content-center align-items-center gap-2 mb-2">
+            <button id="random-btn" class="btn btn-primary btn-lg flex-grow-1" style="max-width: 260px; padding-top: 0.5rem; padding-bottom: 0.5rem;">
+                <span class="bounce-animation">🎲</span> Suggest Meal
+            </button>
+            <button id="filter-icon-btn" class="btn btn-outline-secondary d-flex align-items-center justify-content-center" type="button" data-bs-toggle="collapse" data-bs-target="#filter-collapse"
+                    style="width: 48px; height: 48px; font-size: 1.2rem; position: relative;">
+                <i class="bi bi-sliders2-vertical"></i>
                 <span id="filter-active-dot" class="filter-badge-dot d-none"></span>
             </button>
         </div>
 
-        <div class="collapse" id="filter-collapse">
-            <div class="filter-section text-start mx-auto mb-4 position-relative" style="max-width: 500px;">
+        <div class="collapse" id="filter-collapse" style="-webkit-transform: translateZ(0); will-change: height;">
+            <div class="filter-section text-start mx-auto mb-3 position-relative" style="max-width: 500px;">
                 <button type="button" id="close-filter-btn" class="btn btn-link position-absolute top-0 end-0 d-flex align-items-center justify-content-center text-decoration-none" aria-label="Close" style="width: 48px; height: 48px; z-index: 20;">
                     <i class="bi bi-x-lg" style="font-size: 1.2rem; color: var(--text-color); opacity: 0.7; pointer-events: none;"></i>
                 </button>
@@ -111,19 +114,11 @@
             </div>
         </div>
 
-        <button id="random-btn" class="btn btn-primary btn-lg mb-4">
-            <span class="bounce-animation">🎲</span> Suggest Meal
-        </button>
-
-        <br class="mb-0">
-
-        <a href="list.html" class="btn btn-secondary mb-2 temporary ">
+        <a href="list.html" class="btn btn-secondary btn-sm mb-2 temporary px-3" style="padding-top: 0.3rem; padding-bottom: 0.3rem;">
             📖 View All Meals
         </a>
-
-        <br class="mb-0">
-
-        <a href="saved-meals.html" class="btn btn-secondary mb-2 temporary viewSavedMealsLink">
+        <br>
+        <a href="saved-meals.html" class="btn btn-secondary btn-sm mb-2 temporary viewSavedMealsLink px-3" style="padding-top: 0.3rem; padding-bottom: 0.3rem;">
             💾 View Saved Meals (<span class="savedMealsCount text-warning">0</span>)
         </a>
 
@@ -246,6 +241,7 @@
     $('#random-btn').on('click', function () {
         if (meals.length === 0) return;
 
+        $('#tagline').slideUp(300);
         const $spinner = $('#meal-spinner');
         const $mealCard = $('#meal-card');
 
@@ -348,8 +344,10 @@
                     </div>
                 `);
                 
-                // Prepend image to card
-                $mealCard.find(".card").prepend(img);
+                // Prepend image to card wrapped in a container with faded overlay
+                const $imgWrapper = $('<div class="meal-img-wrapper"></div>');
+                $imgWrapper.append(img);
+                $mealCard.find(".card").prepend($imgWrapper);
 
                 $('.temporary').remove();
                 MealManager.updateBadgeCount();
