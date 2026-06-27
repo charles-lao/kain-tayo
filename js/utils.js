@@ -170,14 +170,18 @@ function openMapsApp(query) {
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
 
     if (isIOS) {
-        // On iOS, custom URL schemes can't open in a new tab.
-        // Try Google Maps app first; if not installed Safari ignores the URL,
-        // then fall back to Apple Maps (always available on iOS).
+        // Try Google Maps app first via custom URL scheme.
         window.location.href = `comgooglemaps://?q=${encoded}`;
-        setTimeout(function () {
-            // If still here after 400ms, Google Maps app isn't installed.
+        // If Google Maps isn't installed, Safari ignores the URL.
+        // Fall back to Apple Maps (always available on iOS) after 400ms.
+        const timer = setTimeout(function () {
             window.location.href = `maps://?q=${encoded}`;
         }, 400);
+        // If Google Maps launched successfully, the page hides (app switch).
+        // Cancel the fallback timer so Apple Maps doesn't also open on return.
+        window.addEventListener('pagehide', function () {
+            clearTimeout(timer);
+        });
     } else {
         // Android auto-routes this URL to the Google Maps app.
         // Desktop just opens it in a browser tab.
@@ -220,14 +224,6 @@ const showMessageToast = (message = null, toastColor = 'primary', toastId = 'mes
     const newToast = new bootstrap.Toast(toastElement, { delay: 3000 });
     newToast.show();
 }
-
-// Opens #imageModal to view a larger image
-$(document).on('click', '.fullscreen-img-modal', function () {
-    const src = $(this).attr('src');
-    const alt = $(this).attr('alt');
-    $('#modalImage').attr('src', src);
-    $('#modalImage').attr('alt', alt);
-});
 
 /**
  * ThemeManager handles dark/light mode switching and system preference detection.
@@ -273,10 +269,11 @@ const ThemeManager = {
     }
 };
 
-// Auto-update badge count and init theme on page load
+// Auto-update badge count, init theme, and image zoom on page load
 $(document).ready(function() {
     MealManager.updateBadgeCount();
      ThemeManager.init();
+    window.zoom = mediumZoom('.fullscreen-img-modal', { background: '#111', margin: 24 });
 });
 
 $(document).on('click', '#theme-toggle', function() {

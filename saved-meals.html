@@ -92,17 +92,6 @@
         </div>
     </div>
     
-    <!-- Bootstrap Modal #imageModal -->
-    <div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content bg-dark">
-                <div class="modal-body text-center p-0">
-                    <img id="modalImage" src="" class="img-fluid rounded" alt="Preview">
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Toast container -->
     <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
         <div id="messageToast" class="toast align-items-center border-0" role="alert" aria-live="assertive" aria-atomic="true">
@@ -118,6 +107,7 @@
 
 
     <!-- Import Global js -->
+    <script src="https://cdn.jsdelivr.net/npm/medium-zoom@1.1.0/dist/medium-zoom.min.js"></script>
     <script src="js/utils.js"></script>
 
     <!-- Script -->
@@ -161,13 +151,14 @@
             const mapsBtn = MealDataService.getMapsButtonHtml(meal);
 
             dataTable.row.add([
-                `<img src="${meal.image}" class="fullscreen-img-modal" width="60" height="40" onerror="this.src='images/food-placeholder.png'" data-bs-toggle="modal" data-bs-target="#imageModal">`,
+                `<img src="${meal.image}" class="fullscreen-img-modal" style="width: 60px; height: auto;" onerror="this.src='images/food-placeholder.png'">`,
                 meal.name,
                 `<div class="d-flex flex-row gap-1 align-items-center">${mapsBtn}<button class="btn btn-danger btn-sm remove-meal-btn" data-meal-id="${meal.id}"><i class="bi bi-trash"></i></button></div>`
             ]);
         });
 
         dataTable.draw();
+        window.zoom.attach('.fullscreen-img-modal');
     }
 
     $(document).on('click', '.remove-meal-btn', function() {
