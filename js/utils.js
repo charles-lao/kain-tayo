@@ -170,18 +170,24 @@ function openMapsApp(query) {
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
 
     if (isIOS) {
-        // Try Google Maps app first via custom URL scheme.
-        window.location.href = `comgooglemaps://?q=${encoded}`;
-        // If Google Maps isn't installed, Safari ignores the URL.
-        // Fall back to Apple Maps (always available on iOS) after 400ms.
+        const googleUrl = `comgooglemaps://?q=${encoded}`;
+        const appleUrl = `maps://?q=${encoded}`;
+
+        // Attempt Google Maps via custom URL scheme.
+        // If the app opened, the page goes to background → visibilitychange fires → cancel timer.
+        // If Google Maps isn't installed, Safari ignores the URL → timer fires → opens Apple Maps.
         const timer = setTimeout(function () {
-            window.location.href = `maps://?q=${encoded}`;
-        }, 400);
-        // If Google Maps launched successfully, the page hides (app switch).
-        // Cancel the fallback timer so Apple Maps doesn't also open on return.
-        window.addEventListener('pagehide', function () {
-            clearTimeout(timer);
+            window.location.href = appleUrl;
+        }, 700);
+
+        document.addEventListener('visibilitychange', function onVis() {
+            if (document.hidden) {
+                clearTimeout(timer);
+                document.removeEventListener('visibilitychange', onVis);
+            }
         });
+
+        window.location.href = googleUrl;
     } else {
         // Android auto-routes this URL to the Google Maps app.
         // Desktop just opens it in a browser tab.
