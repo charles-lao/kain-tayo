@@ -24,11 +24,6 @@
     <title>Kain Tayo | Home</title>
 
     <style>
-        .meal-img {
-          max-height: 40vh;
-          object-fit: cover;
-        }
-
         @keyframes bounce {
             0%, 20%, 50%, 80%, 100% {
                 transform: translateY(0);
@@ -87,7 +82,7 @@
             <button id="random-btn" class="btn btn-primary btn-lg flex-grow-1" style="max-width: 260px; padding-top: 0.5rem; padding-bottom: 0.5rem;">
                 <span class="bounce-animation">🎲</span> Suggest Meal
             </button>
-            <button id="filter-icon-btn" class="btn btn-outline-secondary d-flex align-items-center justify-content-center" type="button" data-bs-toggle="collapse" data-bs-target="#filter-collapse"
+            <button id="filter-icon-btn" class="btn btn-secondary d-flex align-items-center justify-content-center" type="button" data-bs-toggle="collapse" data-bs-target="#filter-collapse"
                     style="width: 48px; height: 48px; font-size: 1.2rem; position: relative;">
                 <i class="bi bi-sliders2-vertical"></i>
                 <span id="filter-active-dot" class="filter-badge-dot d-none"></span>
@@ -316,6 +311,8 @@
 
                 let typeBadges = types.map(t => `<span class="badge bg-secondary me-1 mb-1">${t}</span>`).join('');
 
+                const mapsBtnHtml = MealDataService.getMapsButtonHtml(randomMeal, true);
+
                 $mealCard.html(`
                     <div class="card shadow-sm slide-up mx-auto" style="max-width: 500px;">
                         <div class="card-body">
@@ -331,6 +328,7 @@
                                         class="btn ${saveBtnClass} btn-lg py-3">
                                     ${saveBtnText}
                                 </button>
+                                ${mapsBtnHtml}
                                 <div class="d-flex gap-2">
                                     <a href="list.html" class="btn btn-light btn-lg flex-grow-1">
                                         📖 All Meals
@@ -370,7 +368,7 @@
             // Remove logic
             MealManager.removeMeal(mealId);
             $btn.text('➕ Save Meal').removeClass('btn-danger').addClass('btn-secondary');
-            showMessageToast(mealName + " was removed from your Saved Meals.", "success");
+            showMessageToast(mealName + " was removed from your Saved Meals.", "warning");
         } else {
             // Add logic
             if (MealManager.addMeal(mealId)) {

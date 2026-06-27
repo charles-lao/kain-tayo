@@ -1,6 +1,9 @@
-const BUILD_DATE = '2026-06-14'; // ← UPDATE THIS TO TODAY'S DATE ON EACH DEPLOY
-const cacheName = `kain-tayo-cache-${BUILD_DATE}`;
+// The cache name is computed at install time rather than hardcoded.
+// Every deploy changes this file (via edited HTML/JS), which triggers a SW re-install.
+// The new install gets a fresh cache name and the activate handler purges old caches.
+const cacheName = `kain-tayo-cache-${new Date().toISOString().slice(0, 10)}`;
 
+// If you add a new page, list it here so the SW pre-caches it for offline use.
 const htmlPages = [
   "./",
   "./index.html",

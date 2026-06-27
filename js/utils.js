@@ -131,12 +131,63 @@ const MealDataService = {
             categories: Array.from(categories).sort(),
             types: Array.from(types).sort()
         };
+    },
+
+    /**
+     * Returns the meal name as a Google Maps search query.
+     * @param {Object} meal
+     * @returns {string}
+     */
+    getMapsSearchQuery: function(meal) {
+        return meal.name;
+    },
+
+    /**
+     * Returns a Google Maps button HTML string if the meal is takeaway or dine-in.
+     * @param {Object} meal
+     * @param {boolean} large - Use large button variant (for the random card on index.html)
+     * @returns {string}
+     */
+    getMapsButtonHtml: function(meal, large = false) {
+        const categories = meal.category.split(',').map(c => c.trim());
+        const isMapsRelevant = categories.some(c => c === 'takeaway' || c === 'dine-in');
+        if (!isMapsRelevant) return '';
+        const query = this.getMapsSearchQuery(meal).replace(/"/g, '&quot;');
+        const sizeClass = large ? 'btn-lg py-3' : 'btn-sm';
+        const label = large ? '📍 Find on Google Maps' : '📍';
+        return `<button type="button" class="btn btn-secondary ${sizeClass} maps-btn" data-query="${query}">${label}</button>`;
     }
 };
 
+/**
+ * Opens a maps app with a search query.
+ * On iOS, tries Google Maps app first (via custom URL scheme), then falls back to Apple Maps.
+ * On Android/desktop, uses the Google Maps web URL (Android auto-routes to the app).
+ * @param {string} query
+ */
+function openMapsApp(query) {
+    const encoded = encodeURIComponent(query);
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+
+    if (isIOS) {
+        // On iOS, custom URL schemes can't open in a new tab.
+        // Try Google Maps app first; if not installed Safari ignores the URL,
+        // then fall back to Apple Maps (always available on iOS).
+        window.location.href = `comgooglemaps://?q=${encoded}`;
+        setTimeout(function () {
+            // If still here after 400ms, Google Maps app isn't installed.
+            window.location.href = `maps://?q=${encoded}`;
+        }, 400);
+    } else {
+        // Android auto-routes this URL to the Google Maps app.
+        // Desktop just opens it in a browser tab.
+        window.open(`https://www.google.com/maps/search/?api=1&query=${encoded}`, '_blank');
+    }
+}
+
 // Shows Toast with message
 const showMessageToast = (message = null, toastColor = 'primary', toastId = 'messageToast') => {
-    var toastElement = document.getElementById(toastId);
+    let toastElement = document.getElementById(toastId);
     if (!toastElement) return;
     
     if (message != null){
@@ -230,4 +281,9 @@ $(document).ready(function() {
 
 $(document).on('click', '#theme-toggle', function() {
     ThemeManager.toggle();
+});
+
+// Delegated handler for maps buttons — uses data-query to avoid scope issues
+$(document).on('click', '.maps-btn', function() {
+    openMapsApp($(this).data('query'));
 });

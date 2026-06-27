@@ -125,6 +125,8 @@
                     const isSaved = MealManager.isMealSaved(meal.id);
                     const btnClass = isSaved ? 'btn-danger' : 'btn-secondary';
                     const btnText = isSaved ? '🗑️ Remove' : '💾 Save';
+
+                    const mapsBtn = MealDataService.getMapsButtonHtml(meal);
                     
                     $tbody.append(`
                     <tr class="fade-in">
@@ -135,12 +137,15 @@
                         <td>${meal.type}</td>
                         <td>${meal.category}</td>
                         <td>
-                            <button type="button" 
-                                    data-meal-name="${meal.name}" 
-                                    data-meal-id="${meal.id}" 
-                                    class="btn btn-sm ${btnClass} addMealBtn">
-                                ${btnText}
-                            </button>
+                            <div class="d-flex flex-row gap-1 align-items-center">
+                                ${mapsBtn}
+                                <button type="button" 
+                                        data-meal-name="${meal.name}" 
+                                        data-meal-id="${meal.id}" 
+                                        class="btn btn-sm ${btnClass} addMealBtn">
+                                    ${btnText}
+                                </button>
+                            </div>
                         </td>
                     </tr>
                     `);
@@ -148,7 +153,7 @@
 
                 $('#meal-table').DataTable({
                     lengthChange: false,
-                    order:[1, 'asc']
+                    order: [[1, 'asc']]
                 });
             });
 
@@ -161,7 +166,7 @@
                     // Remove logic
                     MealManager.removeMeal(mealId);
                     $btn.text('💾 Save').removeClass('btn-danger').addClass('btn-secondary');
-                    showMessageToast(mealName + " was removed from your Saved Meals.", "success");
+                    showMessageToast(mealName + " was removed from your Saved Meals.", "warning");
                 } else {
                     // Add logic
                     if (MealManager.addMeal(mealId)) {

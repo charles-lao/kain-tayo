@@ -158,27 +158,30 @@
             const meal = meals.find(m => m.id.toString() === savedId.toString());
             if (!meal) return;
 
+            const mapsBtn = MealDataService.getMapsButtonHtml(meal);
+
             dataTable.row.add([
                 `<img src="${meal.image}" class="fullscreen-img-modal" width="60" height="40" onerror="this.src='images/food-placeholder.png'" data-bs-toggle="modal" data-bs-target="#imageModal">`,
                 meal.name,
-                `<button class="btn btn-danger btn-sm" onclick="removeMeal('${meal.id}')"><i class="bi bi-trash"></i></button>`
+                `<div class="d-flex flex-row gap-1 align-items-center">${mapsBtn}<button class="btn btn-danger btn-sm remove-meal-btn" data-meal-id="${meal.id}"><i class="bi bi-trash"></i></button></div>`
             ]);
         });
 
         dataTable.draw();
     }
 
-    function removeMeal(mealId) {
+    $(document).on('click', '.remove-meal-btn', function() {
+        const mealId = $(this).data('meal-id');
         MealManager.removeMeal(mealId);
         displaySavedMeals();
-        showMessageToast("The meal was removed from your Saved Meals.", "success");
-    }
+        showMessageToast("The meal was removed from your Saved Meals.", "warning");
+    });
 
     $('#clearAllBtn').on('click', function() {
         if (confirm('Are you sure you want to clear all saved meals?')) {
             MealManager.clearAll();
             displaySavedMeals();
-            showMessageToast("All saved meals have been cleared.", "success");
+            showMessageToast("All saved meals have been cleared.", "warning");
         }
     });
 
