@@ -2,161 +2,162 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- JQuery -->
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <!-- Bootstrap 5 and Bootswatch -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.5/dist/lumen/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="styles.css">
-    <link rel="icon" href="./favicon.ico"/>
+    <!-- viewport-fit=cover is required for env(safe-area-inset-*) to resolve on iOS -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
-    <!-- iOS Splash Screens -->
-    <link rel="apple-touch-icon" href="icons/icon.png" />
+    <!-- Resolve the theme before first paint so dark-mode users never see a light flash -->
+    <script>
+        (function () {
+            var t = localStorage.getItem('theme-preference') ||
+                    (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-bs-theme', t);
+        })();
+    </script>
+
+    <title>Kain Tayo | What should we eat?</title>
+    <meta name="description" content="Can't decide what to eat? Kain Tayo randomly suggests Filipino and international meals.">
+    <meta name="theme-color" content="#FBF7F1">
+
+    <meta property="og:title" content="Kain Tayo — What should we eat?">
+    <meta property="og:description" content="Can't decide what to eat? Kain Tayo randomly suggests Filipino and international meals.">
+    <meta property="og:image" content="icons/icon-512.png">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" href="./favicon.ico" sizes="16x16 32x32 48x48"/>
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="Kain Tayo">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-
-    <!-- For Android Chrome -->
     <meta name="mobile-web-app-capable" content="yes">
 
-    <title>Kain Tayo | Home</title>
+    <link rel="preload" href="fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="fonts/plus-jakarta-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
 
-    <style>
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {
-                transform: translateY(0);
-            }
-            40% {
-                transform: translateY(-8px);
-            }
-            60% {
-                transform: translateY(-4px);
-            }
-        }
-
-        .bounce-animation {
-            display: inline-block;
-            animation: bounce 2s infinite;
-        }
-    </style>
-
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-    <!-- Navigation Bar -->
-    <nav class="sticky-top navbar navbar-expand-lg navbar-dark bg-dark p-3">
-        <a class="navbar-brand" href="index.html">🍽️ Kain Tayo</a>
-        
-        <div class="d-flex align-items-center ms-auto">
-            <div id="theme-toggle" class="me-3">
-                <i class="bi bi-moon-stars-fill"></i>
-            </div>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="app-header">
+        <a class="wordmark" href="index.html">
+            <svg class="wordmark-mark" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+                <rect width="100" height="100" rx="24" fill="#C4451F"/>
+                <circle cx="50" cy="50" r="33" fill="#FBF7F1"/>
+                <circle cx="37" cy="37" r="5.4" fill="#C4451F"/>
+                <circle cx="63" cy="37" r="5.4" fill="#C4451F"/>
+                <circle cx="37" cy="63" r="5.4" fill="#C4451F"/>
+                <circle cx="63" cy="63" r="5.4" fill="#C4451F"/>
+                <circle cx="50" cy="50" r="6.6" fill="#E0B84A"/>
+            </svg>Kain Tayo<span class="wordmark-dot">.</span>
+        </a>
+
+        <nav class="desktop-nav" aria-label="Main">
+            <a class="nav-link-pill active" aria-current="page" href="index.html">Home</a>
+            <a class="nav-link-pill" href="list.html">Browse</a>
+            <a class="nav-link-pill" href="saved-meals.html">Saved</a>
+        </nav>
+
+        <div class="header-actions">
+            <button type="button" id="theme-toggle" class="icon-btn" aria-label="Switch to dark theme">
+                <i class="bi bi-moon-stars-fill" aria-hidden="true"></i>
             </button>
         </div>
-    
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link active" href="index.html">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="list.html">Meals List</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="saved-meals.html">Saved Meals</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
+    </header>
 
-    <!-- Main Content -->
-    <div class="container text-center mt-4 fade-in">
+    <main id="main" class="page page--narrow">
 
-        <p id="tagline" class="lead">Can't decide what to eat?</p>
+        <section class="hero">
+            <span class="hero-kicker">Gutom ka na?</span>
+            <!-- Space before the <br> so the accessible name isn't "shouldwe" -->
+            <h1 class="hero-title">What should <br>we eat today?</h1>
+            <p class="hero-sub">Tap the dice and let Kain Tayo decide — from home-cooked ulam to takeaway.</p>
 
-        <div class="d-flex justify-content-center align-items-center gap-2 mb-2">
-            <button id="random-btn" class="btn btn-primary btn-lg flex-grow-1" style="max-width: 260px; padding-top: 0.5rem; padding-bottom: 0.5rem;">
-                <span class="bounce-animation">🎲</span> Suggest Meal
-            </button>
-            <button id="filter-icon-btn" class="btn btn-secondary d-flex align-items-center justify-content-center" type="button" data-bs-toggle="collapse" data-bs-target="#filter-collapse"
-                    style="width: 48px; height: 48px; font-size: 1.2rem; position: relative;">
-                <i class="bi bi-sliders2-vertical"></i>
-                <span id="filter-active-dot" class="filter-badge-dot d-none"></span>
-            </button>
-        </div>
-
-        <div class="collapse" id="filter-collapse" style="-webkit-transform: translateZ(0); will-change: height;">
-            <div class="filter-section text-start mx-auto mb-3 position-relative" style="max-width: 500px;">
-                <button type="button" id="close-filter-btn" class="btn btn-link position-absolute top-0 end-0 d-flex align-items-center justify-content-center text-decoration-none" aria-label="Close" style="width: 48px; height: 48px; z-index: 20;">
-                    <i class="bi bi-x-lg" style="font-size: 1.2rem; color: var(--text-color); opacity: 0.7; pointer-events: none;"></i>
+            <div class="hero-actions">
+                <button id="random-btn" class="btn btn-brand btn-dice flex-grow-1">
+                    <span class="dice" aria-hidden="true">🎲</span> <span class="btn-label">Suggest a meal</span>
                 </button>
-                <div class="mb-3">
-                    <span class="filter-label">Categories</span>
-                    <div id="category-chips" class="chip-group">
-                        <!-- Chips will be injected here -->
-                    </div>
-                </div>
-                <div>
-                    <span class="filter-label">Meal Types</span>
-                    <div id="type-chips" class="chip-group">
-                        <!-- Chips will be injected here -->
-                    </div>
+                <button id="filter-btn" class="icon-btn" type="button"
+                        data-bs-toggle="offcanvas" data-bs-target="#filter-sheet"
+                        aria-label="Filters" style="width:56px;height:56px;border:1px solid var(--hairline);background:var(--surface);">
+                    <i class="bi bi-sliders2-vertical" aria-hidden="true"></i>
+                    <span id="filter-dot" class="dot-indicator d-none"></span>
+                </button>
+            </div>
+        </section>
+
+        <div id="random-meal" aria-live="polite">
+            <div id="meal-skeleton" class="meal-hero d-none" aria-hidden="true">
+                <div class="skeleton skeleton-media"></div>
+                <div class="meal-hero-body">
+                    <div class="skeleton skeleton-line" style="width:60%"></div>
+                    <div class="skeleton skeleton-line" style="width:35%;height:0.75rem"></div>
+                    <div class="skeleton" style="height:48px;border-radius:10px"></div>
                 </div>
             </div>
-        </div>
-
-        <a href="list.html" class="btn btn-secondary btn-sm mb-2 temporary px-3" style="padding-top: 0.3rem; padding-bottom: 0.3rem;">
-            📖 View All Meals
-        </a>
-        <br>
-        <a href="saved-meals.html" class="btn btn-secondary btn-sm mb-2 temporary viewSavedMealsLink px-3" style="padding-top: 0.3rem; padding-bottom: 0.3rem;">
-            💾 View Saved Meals (<span class="savedMealsCount text-warning">0</span>)
-        </a>
-
-        <div id="random-meal">
-            <div id="meal-spinner" class="d-none">
-                <div class="spinner-border text-primary" role="status">
-                    <span class="sr-only"></span>
-                </div>
-            </div>
+            <p id="loading-status" class="visually-hidden">Picking a meal…</p>
             <div id="meal-card"></div>
         </div>
 
-        <div style="height:120px;"></div>
+    </main>
 
-    </div>
-    
-    <!-- Toast container -->
-    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
-        <div id="messageToast" class="toast align-items-center border-0" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="d-flex">
-                <div class="toast-body">
-                    Successfully added to your meals!
-                </div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    <!-- Filter bottom sheet -->
+    <div class="offcanvas offcanvas-bottom filter-sheet" tabindex="-1" id="filter-sheet"
+         aria-labelledby="filter-sheet-title">
+        <div class="offcanvas-header">
+            <h2 class="offcanvas-title h5 mb-0" id="filter-sheet-title">Filters</h2>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="mb-4">
+                <span class="filter-label" id="cat-label">Categories</span>
+                <div id="category-chips" class="chip-group" role="group" aria-labelledby="cat-label"></div>
+            </div>
+            <div class="mb-4">
+                <span class="filter-label" id="type-label">Meal types</span>
+                <div id="type-chips" class="chip-group" role="group" aria-labelledby="type-label"></div>
+            </div>
+            <hr class="hairline">
+            <div class="d-flex align-items-center justify-content-between gap-2">
+                <span class="result-count" id="match-count" aria-live="polite"></span>
+                <button type="button" id="clear-filters" class="btn btn-quiet btn-sm">Clear all</button>
             </div>
         </div>
     </div>
 
+    <!-- Mobile tab bar -->
+    <nav class="tabbar" aria-label="Main">
+        <a class="tabbar-item active" aria-current="page" href="index.html">
+            <span class="tab-icon-wrap"><i class="bi bi-house-door-fill" aria-hidden="true"></i></span>
+            Home
+        </a>
+        <a class="tabbar-item" href="list.html">
+            <span class="tab-icon-wrap"><i class="bi bi-grid" aria-hidden="true"></i></span>
+            Browse
+        </a>
+        <a class="tabbar-item" href="saved-meals.html">
+            <span class="tab-icon-wrap">
+                <i class="bi bi-bookmark-fill" aria-hidden="true"></i>
+            </span>
+            Saved <span class="tab-count savedMealsCount" hidden>0</span>
+        </a>
+    </nav>
 
-
-    <!-- Import Global js -->
     <script src="https://cdn.jsdelivr.net/npm/medium-zoom@1.1.0/dist/medium-zoom.min.js"></script>
     <script src="js/utils.js"></script>
+    <script src="js/layout.js"></script>
 
-    <!-- Script -->
     <script>
     let meals = [];
-    let activeFilters = {
-        categories: [],
-        types: []
-    };
+    let activeFilters = { categories: [], types: [] };
 
-    // Load meals and initialize filters
     MealDataService.getMeals().then(data => {
         meals = data;
         initFilters();
@@ -164,210 +165,214 @@
 
     async function initFilters() {
         const options = await MealDataService.getFilterOptions();
-        
-        // Load from localStorage if exists
-        const savedFilters = localStorage.getItem('activeFilters');
-        if (savedFilters) {
-            activeFilters = JSON.parse(savedFilters);
-            updateFilterBadge();
+
+        const saved = localStorage.getItem('activeFilters');
+        if (saved) {
+            try {
+                const parsed = JSON.parse(saved);
+                activeFilters.categories = parsed.categories || [];
+                activeFilters.types = parsed.types || [];
+            } catch (e) {
+                console.warn('Ignoring malformed saved filters', e);
+            }
         }
 
         renderChips('category-chips', options.categories, 'categories');
         renderChips('type-chips', options.types, 'types');
+        updateFilterState();
     }
 
     function renderChips(containerId, options, groupKey) {
-        const $container = $(`#${containerId}`);
-        options.forEach(option => {
+        const container = document.getElementById(containerId);
+        container.innerHTML = options.map(option => {
             const isActive = activeFilters[groupKey].includes(option);
-            $container.append(`
-                <div class="filter-chip ${isActive ? 'active' : ''}" data-group="${groupKey}" data-value="${option}">
-                    ${option}
-                </div>
-            `);
+            return `<button type="button" class="chip" aria-pressed="${isActive}"
+                            data-group="${groupKey}" data-value="${escapeHtml(option)}">
+                        ${escapeHtml(option)}
+                    </button>`;
+        }).join('');
+    }
+
+    /** Meals matching the current filter selection. */
+    function getFilteredMeals() {
+        if (!activeFilters.categories.length && !activeFilters.types.length) return meals;
+
+        return meals.filter(meal => {
+            const mealCats = MealDataService.splitField(meal.category);
+            const mealTypes = MealDataService.splitField(meal.type);
+
+            const categoryMatch = !activeFilters.categories.length ||
+                                  activeFilters.categories.some(c => mealCats.includes(c));
+            const typeMatch = !activeFilters.types.length ||
+                              activeFilters.types.some(t => mealTypes.includes(t));
+
+            return categoryMatch && typeMatch;
         });
     }
 
-    function updateFilterBadge() {
-        const totalActive = activeFilters.categories.length + activeFilters.types.length;
-        if (totalActive > 0) {
-            $('#filter-active-dot').removeClass('d-none');
-        } else {
-            $('#filter-active-dot').addClass('d-none');
-        }
+    /** Keep the dot, the live match count and the Clear button in sync. */
+    function updateFilterState() {
+        const total = activeFilters.categories.length + activeFilters.types.length;
+        document.getElementById('filter-dot').classList.toggle('d-none', total === 0);
+
+        const count = total === 0 ? meals.length : getFilteredMeals().length;
+        const noun = count === 1 ? 'meal' : 'meals';
+        const verb = total === 0 ? 'available' : (count === 1 ? 'matches' : 'match');
+        document.getElementById('match-count').innerHTML =
+            `<strong>${count}</strong> ${noun} ${verb}`;
+
+        document.getElementById('clear-filters').disabled = total === 0;
     }
 
-    // Chip click handler
-    $(document).on('click', '.filter-chip', function() {
-        const $chip = $(this);
-        const group = $chip.data('group');
-        const value = $chip.data('value');
+    $(document).on('click', '.chip', function () {
+        const group = this.dataset.group;
+        const value = this.dataset.value;
+        const nowActive = this.getAttribute('aria-pressed') !== 'true';
 
-        if ($chip.hasClass('active')) {
-            $chip.removeClass('active');
-            activeFilters[group] = activeFilters[group].filter(v => v !== value);
-        } else {
-            $chip.addClass('active');
+        this.setAttribute('aria-pressed', String(nowActive));
+        if (nowActive) {
             activeFilters[group].push(value);
+        } else {
+            activeFilters[group] = activeFilters[group].filter(v => v !== value);
         }
 
         localStorage.setItem('activeFilters', JSON.stringify(activeFilters));
-        updateFilterBadge();
+        updateFilterState();
     });
 
-    $(document).on('click', '#close-filter-btn', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        const filterCollapse = document.getElementById('filter-collapse');
-        const bsCollapse = bootstrap.Collapse.getInstance(filterCollapse) || new bootstrap.Collapse(filterCollapse);
-        bsCollapse.hide();
+    $('#clear-filters').on('click', function () {
+        activeFilters = { categories: [], types: [] };
+        localStorage.setItem('activeFilters', JSON.stringify(activeFilters));
+        document.querySelectorAll('.chip').forEach(c => c.setAttribute('aria-pressed', 'false'));
+        updateFilterState();
     });
 
-    $('#random-btn').on('click', function () {
-        if (meals.length === 0) return;
+    function suggestMeal() {
+        if (!meals.length) return;
 
-        $('#tagline').slideUp(300);
-        const $spinner = $('#meal-spinner');
-        const $mealCard = $('#meal-card');
+        const skeleton = document.getElementById('meal-skeleton');
+        const mealCard = document.getElementById('meal-card');
 
-        $mealCard.empty();
-        $spinner.removeClass('d-none');
+        mealCard.innerHTML = '';
+        skeleton.classList.remove('d-none');
+        document.getElementById('loading-status').textContent = 'Picking a meal…';
 
-        // Simulate delay for UX effect
         setTimeout(() => {
-            let filteredMeals = meals;
+            const filteredMeals = getFilteredMeals();
 
-            // Apply filters if any are active
-            if (activeFilters.categories.length > 0 || activeFilters.types.length > 0) {
-                filteredMeals = meals.filter(meal => {
-                    const mealCats = meal.category.split(',').map(c => c.trim());
-                    const mealTypes = meal.type.split(',').map(t => t.trim());
-
-                    const categoryMatch = activeFilters.categories.length === 0 || 
-                                        activeFilters.categories.some(c => mealCats.includes(c));
-                    
-                    const typeMatch = activeFilters.types.length === 0 || 
-                                    activeFilters.types.some(t => mealTypes.includes(t));
-
-                    return categoryMatch && typeMatch;
-                });
-            }
-
-            if (filteredMeals.length === 0) {
-                $spinner.addClass('d-none');
-                $mealCard.html('<p class="text-muted">No meals found with the selected filters.</p>');
+            if (!filteredMeals.length) {
+                skeleton.classList.add('d-none');
+                // No card to focus on, so restore the full hero rather than leaving
+                // a collapsed one above an empty state.
+                setSuggestionState(false);
+                mealCard.innerHTML = `
+                    <div class="empty-state">
+                        <span class="empty-icon"><i class="bi bi-funnel" aria-hidden="true"></i></span>
+                        <h2>Walang match</h2>
+                        <p>No meals fit those filters. Try loosening them a bit.</p>
+                        <button type="button" class="btn btn-quiet" data-bs-toggle="offcanvas"
+                                data-bs-target="#filter-sheet">Adjust filters</button>
+                    </div>`;
+                document.getElementById('loading-status').textContent = 'No meals match the selected filters.';
                 return;
             }
 
-            // Get last suggested meal ID to avoid showing same meal twice
-            const lastSuggestedId = localStorage.getItem('lastSuggestedMealId');
-            
-            // Filter out the last suggested meal
-            let availableMeals = filteredMeals.filter(meal => meal.id != lastSuggestedId);
-            
-            // If all meals are filtered out, use all meals
-            if (availableMeals.length === 0) {
-                availableMeals = filteredMeals;
-            }
+            // Avoid repeating the previous suggestion unless it's the only option.
+            const lastId = localStorage.getItem('lastSuggestedMealId');
+            let pool = filteredMeals.filter(m => m.id != lastId);
+            if (!pool.length) pool = filteredMeals;
 
-            const randomMeal = availableMeals[Math.floor(Math.random() * availableMeals.length)];
-            
-            // Save this meal ID as the last suggested
-            localStorage.setItem('lastSuggestedMealId', randomMeal.id);
+            const meal = pool[Math.floor(Math.random() * pool.length)];
+            localStorage.setItem('lastSuggestedMealId', meal.id);
 
-            const img = new Image();
-            img.src = randomMeal.image;
-            img.alt = randomMeal.name;
-            img.className = "card-img-top meal-img fullscreen-img-modal";
+            renderMeal(meal, skeleton, mealCard);
+        }, 280);
+    }
 
-            img.onload = function () {
-                $spinner.addClass('d-none');
+    /**
+     * Collapse the hero down to the dice row once a meal is on screen, so the
+     * card owns the fold, and carry the re-roll affordance on the same button.
+     * @param {boolean} active
+     */
+    function setSuggestionState(active) {
+        document.body.classList.toggle('has-suggestion', active);
+        document.querySelector('#random-btn .btn-label').textContent =
+            active ? 'Suggest another' : 'Suggest a meal';
+    }
 
-                const isSaved = MealManager.isMealSaved(randomMeal.id);
-                const saveBtnText = isSaved ? '🗑️ Remove' : '➕ Save Meal';
-                const saveBtnClass = isSaved ? 'btn-danger' : 'btn-secondary';
+    /**
+     * Paint the card immediately and let the photo land in it. Waiting on
+     * img.onload before rendering meant a slow or stalled image left the user
+     * staring at a skeleton with no way out.
+     */
+    function renderMeal(meal, skeleton, mealCard) {
+        skeleton.classList.add('d-none');
+        document.getElementById('loading-status').textContent = `Suggested: ${meal.name}`;
 
-                const categories = randomMeal.category.split(',').map(c => c.trim());
-                const types = randomMeal.type.split(',').map(t => t.trim());
-                
-                let categoryBadges = categories.map(c => {
-                    let badgeClass = 'bg-success';
-                    if (c === 'takeaway') badgeClass = 'bg-warning text-dark';
-                    if (c === 'dine-in') badgeClass = 'bg-info text-dark';
-                    return `<span class="badge ${badgeClass} me-1 mb-1">${c}</span>`;
-                }).join('');
+        const isSaved = MealManager.isMealSaved(meal.id);
+        const mapsBtn = MealDataService.getMapsButtonHtml(meal, 'hero');
+        const name = escapeHtml(meal.name);
 
-                let typeBadges = types.map(t => `<span class="badge bg-secondary me-1 mb-1">${t}</span>`).join('');
-
-                const mapsBtnHtml = MealDataService.getMapsButtonHtml(randomMeal, true);
-
-                $mealCard.html(`
-                    <div class="card shadow-sm slide-up mx-auto" style="max-width: 500px;">
-                        <div class="card-body">
-                            <h5 class="card-title mb-2">${randomMeal.name}</h5>
-                            <div class="mb-3">
-                                ${categoryBadges}
-                                ${typeBadges}
-                            </div>
-                            <div class="d-grid gap-2">
-                                <button type="button" id="addMealBtn" 
-                                        data-meal-name="${randomMeal.name}" 
-                                        data-meal-id="${randomMeal.id}" 
-                                        class="btn ${saveBtnClass} btn-lg py-3">
-                                    ${saveBtnText}
-                                </button>
-                                ${mapsBtnHtml}
-                                <div class="d-flex gap-2">
-                                    <a href="list.html" class="btn btn-light btn-lg flex-grow-1">
-                                        📖 All Meals
-                                    </a>
-                                    <a href="saved-meals.html" class="btn btn-light btn-lg flex-grow-1 viewSavedMealsLink">
-                                        💾 Saved (<span class="savedMealsCount text-warning">0</span>)
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
+        mealCard.innerHTML = `
+            <article class="meal-hero slide-up">
+                <div class="meal-hero-media">
+                    <img src="${escapeHtml(meal.image)}" alt="${name}"
+                         class="fullscreen-img-modal" decoding="async"
+                         onerror="this.onerror=null;this.src='images/food-placeholder.png';">
+                    <h2 class="meal-hero-name">${name}</h2>
+                </div>
+                <div class="meal-hero-body">
+                    <div class="cat-row">${MealDataService.getCategoryBadgesHtml(meal)}</div>
+                    <div class="d-grid gap-2">
+                        <button type="button" id="addMealBtn"
+                                data-meal-name="${name}"
+                                data-meal-id="${escapeHtml(meal.id)}"
+                                class="btn ${isSaved ? 'btn-saved' : 'btn-quiet'}"
+                                style="min-height:48px;">
+                            <i class="bi ${isSaved ? 'bi-bookmark-check-fill' : 'bi-bookmark'}" aria-hidden="true"></i>
+                            <span class="save-label">${isSaved ? 'Saved' : 'Save meal'}</span>
+                        </button>
+                        ${mapsBtn}
                     </div>
-                `);
-                
-                // Prepend image to card wrapped in a container with faded overlay
-                const $imgWrapper = $('<div class="meal-img-wrapper"></div>');
-                $imgWrapper.append(img);
-                $mealCard.find(".card").prepend($imgWrapper);
-                window.zoom.attach(img);
+                </div>
+            </article>`;
 
-                $('.temporary').remove();
-                MealManager.updateBadgeCount();
-            };
+        attachZoom(mealCard.querySelector('img'));
 
-            img.onerror = function () {
-                this.onerror = null;
-                this.src = 'images/food-placeholder.png';
-            };
-        }, 300);
-    });
+        setSuggestionState(true);
+    }
 
-    // Handles saving/removing of meal to localstorage
-    $(document).on('click', '#addMealBtn', function() {
-        const $btn = $(this);
-        const mealId = $btn.data('meal-id');
-        const mealName = $btn.data('meal-name');
+    $('#random-btn').on('click', suggestMeal);
+
+    // Save / unsave the suggested meal
+    $(document).on('click', '#addMealBtn', function () {
+        const btn = this;
+        const mealId = btn.dataset.mealId;
+        const mealName = btn.dataset.mealName;
+        const icon = btn.querySelector('i');
+        const label = btn.querySelector('.save-label');
 
         if (MealManager.isMealSaved(mealId)) {
-            // Remove logic
-            MealManager.removeMeal(mealId);
-            $btn.text('➕ Save Meal').removeClass('btn-danger').addClass('btn-secondary');
-            showMessageToast(mealName + " was removed from your Saved Meals.", "warning");
-        } else {
-            // Add logic
-            if (MealManager.addMeal(mealId)) {
-                $btn.text('🗑️ Remove').removeClass('btn-secondary').addClass('btn-danger');
-                showMessageToast(mealName + " is successfully added to your Saved Meals!", "success");
-            }
+            const index = MealManager.removeMeal(mealId);
+            btn.classList.replace('btn-saved', 'btn-quiet');
+            icon.className = 'bi bi-bookmark';
+            label.textContent = 'Save meal';
+            showMessageToast(`Removed ${mealName}`, 'warning', {
+                label: 'Undo',
+                onClick: () => {
+                    MealManager.restoreMeal(mealId, index);
+                    btn.classList.replace('btn-quiet', 'btn-saved');
+                    icon.className = 'bi bi-bookmark-check-fill';
+                    label.textContent = 'Saved';
+                }
+            });
+        } else if (MealManager.addMeal(mealId)) {
+            btn.classList.replace('btn-quiet', 'btn-saved');
+            icon.className = 'bi bi-bookmark-check-fill';
+            label.textContent = 'Saved';
+            showMessageToast(`Saved ${mealName}`, 'success');
         }
     });
-
-
     </script>
 
     <script src="js/sw-register.js"></script>
@@ -375,4 +380,3 @@
 
 </body>
 </html>
-

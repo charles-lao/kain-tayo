@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" role="img" aria-label="Kain Tayo">
+  <title>Kain Tayo</title>
+  <!-- Maskable variant: full-bleed field (the platform supplies the corner shape)
+       with the artwork at 80% so Android's circle crop never clips the plate. -->
+  <rect width="100" height="100" fill="#C4451F"/>
+  <g transform="translate(50,50) scale(0.8) translate(-50,-50)">
+    <circle cx="50" cy="50" r="33" fill="#FBF7F1"/>
+    <circle cx="37" cy="37" r="5.4" fill="#C4451F"/>
+    <circle cx="63" cy="37" r="5.4" fill="#C4451F"/>
+    <circle cx="37" cy="63" r="5.4" fill="#C4451F"/>
+    <circle cx="63" cy="63" r="5.4" fill="#C4451F"/>
+    <circle cx="50" cy="50" r="6.6" fill="#E0B84A"/>
+  </g>
+</svg>

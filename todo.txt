@@ -1,10 +1,21 @@
 ### TODO
-- [ ] Faded image bottom for the random meal card
 - [ ] More meals in data/foods.json
 - [ ] Add more filter categories (e.g., meat-only, veg-only, rice-only)
 - [ ] Create a Contact/About page
 
-### Completed
+### Completed (UI/UX redesign)
+- [x] Faded image bottom for the random meal card (scrim + name overlay)
+- [x] Rebranded off stock Bootswatch: warm palette, design tokens, self-hosted Fraunces + Plus Jakarta Sans
+- [x] Bottom tab bar on mobile, top nav on desktop — hamburger removed
+- [x] Meals list rebuilt as a photo grid with search; DataTables dependency dropped
+- [x] Filters moved to a bottom sheet with live match count, Clear all, accessible chips
+- [x] Sticky "Suggest another" bar so the primary action stays in thumb reach
+- [x] Undo on remove / clear-all; native confirm() replaced with a modal
+- [x] Fixed theme flash (inline head script), added focus states, skip link, reduced-motion
+- [x] Fixed offline: medium-zoom + icon font now cached; SW no longer breaks the page when a CDN fails
+- [x] Split precache from a durable image cache so version bumps don't wipe photos
+
+### Completed (earlier)
 - [x] Centralized MealManager and MealDataService for better logic sharing
 - [x] Improved Home-cooked filter UI/UX
 - [x] Improved "Save Meal" button state (changes to "Already Saved")

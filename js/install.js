@@ -14,26 +14,27 @@
   function buildBannerHTML() {
     if (deferredPrompt) {
       return `
-        <span>📲 Get Kain Tayo on your home screen for quick access!</span>
+        <i class="bi bi-phone" aria-hidden="true"></i>
+        <span class="banner-text">Add Kain Tayo to your home screen</span>
         <div class="install-banner-actions">
-          <button id="install-btn" class="btn btn-sm btn-light fw-bold">Install</button>
-          <button id="dismiss-install-btn" class="btn btn-sm btn-outline-light border-0">Not now</button>
+          <button id="install-btn" class="banner-btn banner-btn--solid">Install</button>
+          <button id="dismiss-install-btn" class="icon-btn" aria-label="Dismiss"
+                  style="width:32px;height:32px;color:inherit;">
+            <i class="bi bi-x-lg" aria-hidden="true"></i>
+          </button>
         </div>`;
     }
 
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-    if (isIOS) {
-      return `
-        <span>📲 Install Kain Tayo: tap Share <i class="bi bi-box-arrow-up"></i> → Add to Home Screen</span>
-        <div class="install-banner-actions">
-          <button id="dismiss-install-btn" class="btn btn-sm btn-outline-light border-0">Got it</button>
-        </div>`;
-    }
+    const text = isIOS
+      ? 'Install: tap Share <i class="bi bi-box-arrow-up"></i> → Add to Home Screen'
+      : 'Add Kain Tayo to your home screen';
 
     return `
-      <span>📲 Add Kain Tayo to your home screen for the best experience!</span>
+      <i class="bi bi-phone" aria-hidden="true"></i>
+      <span class="banner-text">${text}</span>
       <div class="install-banner-actions">
-        <button id="dismiss-install-btn" class="btn btn-sm btn-outline-light border-0">Dismiss</button>
+        <button id="dismiss-install-btn" class="banner-btn">Got it</button>
       </div>`;
   }
 
@@ -45,7 +46,14 @@
     banner.id = 'install-banner';
     banner.className = 'install-banner';
     banner.innerHTML = buildBannerHTML();
-    document.body.prepend(banner);
+
+    // Sits in the flow just below the sticky header, so the two never overlap.
+    const header = document.querySelector('.app-header');
+    if (header) {
+      header.insertAdjacentElement('afterend', banner);
+    } else {
+      document.body.prepend(banner);
+    }
 
     document.getElementById('install-btn')?.addEventListener('click', async () => {
       if (!deferredPrompt) return;
