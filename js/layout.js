@@ -1,7 +1,7 @@
 /**
- * Shell chrome that is identical on every page and carries no first-paint cost:
- * the toast container and the offline indicator. The header and tab bar stay in
- * each HTML file on purpose — injecting them here would flash on load.
+ * Injects the toast container and offline bar on every page. The header and tab
+ * bar stay inline in each page because injecting them flashes on load.
+ * Loads after utils.js, which defines onReady.
  */
 (function () {
     function injectToastStack() {
@@ -11,12 +11,11 @@
         stack.id = 'toast-stack';
         stack.className = 'toast-stack';
         stack.innerHTML = `
-            <div id="messageToast" class="toast app-toast" role="alert" aria-live="polite" aria-atomic="true">
+            <div id="messageToast" class="toast app-toast" role="status" aria-live="polite" aria-atomic="true">
                 <i class="bi bi-check-circle-fill toast-icon" aria-hidden="true"></i>
                 <div class="toast-body"></div>
                 <button type="button" class="toast-action d-none"></button>
-                <button type="button" class="icon-btn" data-bs-dismiss="toast" aria-label="Dismiss"
-                        style="width:32px;height:32px;font-size:0.9rem;">
+                <button type="button" class="icon-btn icon-btn--sm" data-bs-dismiss="toast" aria-label="Dismiss">
                     <i class="bi bi-x-lg" aria-hidden="true"></i>
                 </button>
             </div>`;
@@ -31,7 +30,7 @@
         bar.className = 'offline-bar';
         bar.setAttribute('role', 'status');
         bar.hidden = true;
-        bar.innerHTML = '<i class="bi bi-wifi-off" aria-hidden="true"></i> Offline — showing saved meals';
+        bar.innerHTML = '<i class="bi bi-wifi-off" aria-hidden="true"></i> You\'re offline. Some photos may not load.';
         document.body.prepend(bar);
 
         const sync = () => { bar.hidden = navigator.onLine; };
@@ -40,14 +39,8 @@
         sync();
     }
 
-    function init() {
+    onReady(() => {
         injectToastStack();
         injectOfflineBar();
-    }
-
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
-    } else {
-        init();
-    }
+    });
 })();

@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Kain Tayo — design system
+   Kain Tayo design system
    Warm "carinderia" palette: achuete red, ube violet, banana leaf, warm paper.
    Loaded after stock Bootstrap; overrides --bs-* so components inherit the brand.
    ========================================================================== */
@@ -30,9 +30,8 @@
                    U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
-/* Icons are the interface here, so the font is self-hosted rather than left to a
-   CDN URL the service worker would have to match by hash. Declared after the
-   Bootstrap Icons stylesheet loads, so this src wins. */
+/* Self-hosted so offline icons don't depend on a CDN URL. Declared after the
+   Bootstrap Icons stylesheet, so this src wins. */
 @font-face {
     font-family: 'bootstrap-icons';
     font-display: block;
@@ -75,7 +74,7 @@
     --r-chip: 999px;
     --r-sheet: 22px;
 
-    /* Elevation — warm-tinted, low spread. Cards get hairlines, not drop shadows. */
+    /* Elevation: warm-tinted, low spread. Cards use hairline borders instead. */
     --shadow-sm: 0 1px 2px rgba(58, 40, 28, 0.06);
     --shadow-md: 0 6px 20px -8px rgba(58, 40, 28, 0.22);
     --shadow-lift: 0 -6px 24px -12px rgba(58, 40, 28, 0.25);
@@ -123,7 +122,7 @@
     --shadow-lift: 0 -6px 24px -12px rgba(0, 0, 0, 0.7);
 }
 
-/* Map onto Bootstrap so its components pick up the brand for free. */
+/* Map the tokens onto Bootstrap's --bs-* variables. */
 :root,
 [data-bs-theme="dark"] {
     --bs-body-bg: var(--paper);
@@ -151,7 +150,7 @@ body {
     font-size: var(--fs-body);
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
-    /* Room for the mobile tab bar. Replaces the old fixed spacer div. */
+    /* Room for the mobile tab bar. */
     padding-bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom) + 1rem);
 }
 
@@ -242,8 +241,7 @@ body {
     color: var(--brand);
 }
 
-/* Inline app mark — same artwork as the installed icon, so the header and the
-   home-screen icon always match. */
+/* Inline copy of icons/icon.svg. Edit both together. */
 .wordmark-mark {
     width: 24px;
     height: 24px;
@@ -252,7 +250,7 @@ body {
     margin-right: 0.15rem;
 }
 
-/* Desktop nav — hidden on mobile, where the tab bar takes over. */
+/* Desktop nav. Hidden on mobile, where the tab bar replaces it. */
 .desktop-nav { display: none; }
 
 @media (min-width: 768px) {
@@ -293,10 +291,11 @@ body {
 }
 
 /* --------------------------------------------------------------------------
-   5. Icon button — 44px tap target everywhere
+   5. Icon button, 44px tap target
    -------------------------------------------------------------------------- */
 
 .icon-btn {
+    position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -330,7 +329,15 @@ body {
     background: var(--brand);
     border: 2px solid var(--paper);
 }
-.icon-btn { position: relative; }
+
+/* Bordered variant for the filter button next to the dice and the search box */
+.icon-btn--outline {
+    flex-shrink: 0;
+    border: 1px solid var(--hairline);
+    background: var(--surface);
+}
+.icon-btn--lg { width: 56px; height: 56px; }
+.icon-btn--sm { width: 32px; height: 32px; }
 
 /* --------------------------------------------------------------------------
    6. Bottom tab bar (mobile only)
@@ -379,8 +386,8 @@ body {
 .tabbar-item.active {
     color: var(--brand);
 }
-/* Anchored to the tab item, not the icon wrapper: the count sits after the
-   label in the DOM so screen readers announce "Saved 3", not "3 Saved". */
+/* Positioned on the tab item because the count follows the label in the DOM,
+   so screen readers say "Saved 3". */
 .tabbar-item .tab-count {
     position: absolute;
     top: 6px;
@@ -446,7 +453,7 @@ body {
     color: var(--brand);
 }
 
-/* The hero dice button — the one deliberately loud element. */
+/* Hero dice button, the page's one high-contrast element. */
 .btn-dice {
     min-height: 56px;
     padding-inline: 1.75rem;
@@ -505,7 +512,7 @@ body {
 }
 
 /* --------------------------------------------------------------------------
-   9. Category badges — letterspaced labels, not Bootstrap semantic pills
+   9. Category badges
    -------------------------------------------------------------------------- */
 
 .cat {
@@ -607,6 +614,7 @@ body {
     flex-direction: column;
     gap: 0.85rem;
 }
+.meal-hero-body .btn { min-height: 48px; }
 
 /* Photo grid used by Browse and Saved */
 .meal-grid {
@@ -692,8 +700,7 @@ body {
     transition: transform 0.12s var(--ease), background-color 0.15s var(--ease),
                 color 0.15s var(--ease);
 }
-/* Keeps the control visually light on a 172px tile while giving it a ~46px
-   touch target, which is what actually matters on a phone. */
+/* Extends the 38px button's touch target to 46px. */
 .tile-btn::after {
     content: '';
     position: absolute;
@@ -703,8 +710,7 @@ body {
 .tile-btn:hover { transform: scale(1.06); }
 .tile-btn:active { transform: scale(0.94); }
 
-/* The maps control is an <a>, so it needs the underline suppressed and the
-   button colour asserted over the link colour. */
+/* The maps control is an <a>. Remove the underline and override the link colour. */
 .maps-btn,
 .maps-btn:hover,
 .maps-btn:focus {
@@ -760,15 +766,13 @@ body {
     gap: 0.6rem;
 }
 
-/* Once a meal is on screen the hero collapses to just the dice row, so the card
-   owns the fold. The full hero is the landing state and stays until the first roll. */
+/* After the first roll, hide the kicker and subtitle so the card fits above the fold. */
 .has-suggestion .hero-kicker,
 .has-suggestion .hero-sub {
     display: none;
 }
 
-/* Visually hidden rather than display:none — the page keeps a valid h1 in the
-   accessibility tree once the meal name takes over visual focus. */
+/* Visually hidden, not display:none, so the page keeps its h1 for screen readers. */
 .has-suggestion .hero-title {
     position: absolute;
     width: 1px;
@@ -957,6 +961,9 @@ body {
 .app-toast.is-success .toast-icon { color: var(--leaf); }
 .app-toast.is-warning .toast-icon { color: var(--calamansi); }
 .app-toast .toast-body { padding: 0; flex: 1; }
+.app-toast .icon-btn { font-size: 0.9rem; }
+/* The toast runs with Bootstrap's animation off (see showMessageToast). */
+.app-toast.show { animation: slideUp 0.2s var(--ease); }
 .app-toast .toast-action {
     flex-shrink: 0;
     border: none;
@@ -986,8 +993,8 @@ body {
     letter-spacing: 0.02em;
 }
 
-/* In normal flow, directly under the header — it scrolls away instead of
-   competing with the sticky header for the top of the screen. */
+/* In normal flow under the header, so it scrolls away and never overlaps the
+   sticky header. */
 .install-banner {
     display: flex;
     align-items: center;
@@ -998,12 +1005,10 @@ body {
     font-size: var(--fs-small);
     font-weight: 500;
 }
+/* Wraps rather than truncates, so the iOS steps stay readable on narrow phones. */
 .install-banner .banner-text {
     flex: 1;
     min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
 }
 @media (min-width: 480px) {
     .install-banner { padding-inline: 1rem; }
@@ -1014,6 +1019,7 @@ body {
     gap: 0.4rem;
     flex-shrink: 0;
 }
+.install-banner .icon-btn { color: inherit; }
 .install-banner .banner-btn {
     border: 1px solid rgba(255, 255, 255, 0.55);
     background: transparent;

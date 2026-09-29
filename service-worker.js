@@ -1,18 +1,14 @@
-// The cache name combines a manual version with the install date.
-// The date alone was not enough: two deploys on the same day produced the same
-// cache name, so the activate handler saw nothing to purge and stale assets
-// (old CSS frameworks, removed libraries) lived on. Bump CACHE_VERSION whenever
-// the asset lists below change.
-const CACHE_VERSION = "v5";
-const PRECACHE_PREFIX = "kain-tayo-precache-";
-const cacheName = `${PRECACHE_PREFIX}${CACHE_VERSION}-${new Date().toISOString().slice(0, 10)}`;
+// Bump CACHE_VERSION when the asset lists change. Keep the name constant: the
+// browser re-runs this script on every worker restart, so a date in the name
+// pointed at an empty cache the day after install.
+const CACHE_VERSION = "v6";
+const cacheName = `kain-tayo-precache-${CACHE_VERSION}`;
 
-// Meal photos live in their own cache with a stable name. They are large, they
-// never change once published, and they are filled in as the user browses — so
-// they must survive a precache version bump instead of being purged with it.
+// Meal photos are large and never change, so they get their own cache that a
+// version bump does not purge.
 const imageCacheName = "kain-tayo-images";
 
-// If you add a new page, list it here so the SW pre-caches it for offline use.
+// Add new pages here so they work offline.
 const htmlPages = [
   "./",
   "./index.html",
@@ -20,24 +16,18 @@ const htmlPages = [
   "./saved-meals.html"
 ];
 
+// Files that never change at the same URL: CDN libraries are pinned by version,
+// and fonts and icons are regenerated rarely enough to go with a version bump.
 const preCacheAssets = [
-  "./styles.css",
-  "./js/utils.js",
-  "./js/layout.js",
-  "./js/install.js",
-  "./js/sw-register.js",
   "./icons/icon-192.png",
   "./icons/icon-512.png",
   "./icons/icon-maskable-512.png",
   "./icons/apple-touch-icon.png",
   "./favicon.ico",
   "./favicon.svg",
-  "./manifest.json",
-  // Self-hosted so offline rendering never depends on a CDN URL or its hash.
   "./fonts/fraunces-latin.woff2",
   "./fonts/plus-jakarta-sans-latin.woff2",
   "./fonts/bootstrap-icons.woff2",
-  "https://code.jquery.com/jquery-3.7.1.min.js",
   "https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js",
   "https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css",
   "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css",
@@ -45,22 +35,30 @@ const preCacheAssets = [
   "images/food-placeholder.png"
 ];
 
+// Our own code and data change at the same URL on every deploy. Serving them
+// network-first like the HTML keeps pages and scripts from the same deploy,
+// without needing a version bump for every code change.
 const networkFirstAssets = [
+  "./styles.css",
+  "./js/utils.js",
+  "./js/layout.js",
+  "./js/install.js",
+  "./js/sw-register.js",
+  "./manifest.json",
   "./data/foods.json"
 ];
 
 const staticAssets = [...htmlPages, ...preCacheAssets, ...networkFirstAssets];
 
-// Install event – cache static assets.
-// addAll() is atomic: a single failing CDN request would throw away the whole
-// precache. Each asset is cached individually so one bad response can't leave
-// the app with nothing offline.
+// Not addAll(): it is atomic, so one failing CDN request would discard the whole
+// precache. cache: 'reload' skips the HTTP cache so a fresh install never stores
+// files from the previous deploy.
 self.addEventListener("install", event => {
   event.waitUntil(
     caches.open(cacheName).then(cache =>
       Promise.allSettled(
         staticAssets.map(asset =>
-          cache.add(asset).catch(err => {
+          cache.add(new Request(asset, { cache: 'reload' })).catch(err => {
             console.warn("[SW] precache miss:", asset, err);
           })
         )
@@ -70,15 +68,12 @@ self.addEventListener("install", event => {
   self.skipWaiting();
 });
 
-// Activate event – purge superseded precaches only. The image cache is left
-// alone so a version bump doesn't wipe every meal photo the user has offline.
+// Delete every other kain-tayo cache, including legacy names, but keep photos.
 self.addEventListener("activate", event => {
   event.waitUntil(
     caches.keys().then(keys =>
       Promise.all(
         keys
-          // Everything this app has ever named, except the live precache and the
-          // durable image cache. Catches legacy names from earlier versions too.
           .filter(key => key.startsWith('kain-tayo') &&
                          key !== cacheName &&
                          key !== imageCacheName)
@@ -90,9 +85,8 @@ self.addEventListener("activate", event => {
 });
 
 /**
- * Normalise a precache entry to a path fragment we can match request URLs against.
- * "./" is dropped entirely — as an empty string it matched every URL, which made
- * the HTML branch below swallow every request and left cacheFirst unreachable.
+ * Turn list entries into path fragments to match request URLs against.
+ * "./" is dropped because an empty string matches every URL.
  */
 function matchFragments(list) {
   return list
@@ -104,43 +98,27 @@ const htmlFragments = matchFragments(htmlPages);
 const networkFirstFragments = matchFragments(networkFirstAssets);
 const cacheFirstFragments = matchFragments(preCacheAssets);
 
-// Fetch event
 self.addEventListener("fetch", event => {
   const req = event.request;
-
-  // Only GETs are cacheable.
   if (req.method !== 'GET') return;
 
   const url = new URL(req.url);
   const isSameOriginRoot = url.origin === self.location.origin &&
                            (url.pathname === '/' || url.pathname.endsWith('/'));
 
-  // Navigations and HTML: Network First (fresh content online, cache offline)
   if (req.mode === 'navigate' || isSameOriginRoot ||
-      htmlFragments.some(f => url.pathname.endsWith(f))) {
+      htmlFragments.some(f => url.pathname.endsWith(f)) ||
+      networkFirstFragments.some(f => url.pathname.endsWith(f))) {
     event.respondWith(networkFirst(req, true));
   }
-  // Data that should always be fresh: Network First
-  else if (networkFirstFragments.some(f => url.pathname.endsWith(f))) {
-    event.respondWith(networkFirst(req, true));
-  }
-  // Precached static assets (incl. fonts and CDN libs): Cache First
   else if (cacheFirstFragments.some(f => req.url.includes(f))) {
     event.respondWith(cacheFirst(req));
   }
-  // Meal photos: Cache First against the long-lived image cache
   else if (req.destination === 'image') {
     event.respondWith(imageCacheFirst(req));
   }
   else {
     event.respondWith(networkFirst(req));
-  }
-});
-
-// Listen for skip-waiting message from the page
-self.addEventListener("message", event => {
-  if (event.data && event.data.type === "SKIP_WAITING") {
-    self.skipWaiting();
   }
 });
 
@@ -151,9 +129,8 @@ async function cacheFirst(req) {
 }
 
 /**
- * Meal photos: serve from the durable image cache, filling it on first view.
- * Falls back to the bundled placeholder when a photo is neither cached nor
- * reachable, so a tile never renders as a broken image.
+ * Meal photos: serve from the image cache, filling it on first view. Falls back
+ * to the placeholder when a photo is neither cached nor reachable.
  */
 async function imageCacheFirst(req) {
   const cache = await caches.open(imageCacheName);
@@ -177,10 +154,8 @@ async function imageCacheFirst(req) {
 
 /**
  * @param {Request} req
- * @param {boolean} store Only true for assets this cache owns (pages, data,
- *   precached statics). Caching every successful response indiscriminately let
- *   arbitrary fetches bloat the precache, and all of it was thrown away on the
- *   next version bump.
+ * @param {boolean} store True only for files listed above. Storing every
+ *   response let unrelated fetches bloat the precache.
  */
 async function networkFirst(req, store = false) {
   const cache = await caches.open(cacheName);
@@ -193,8 +168,7 @@ async function networkFirst(req, store = false) {
     }
     return fresh;
   } catch (e) {
-    // ignoreSearch so a shared link carrying ?utm_source=… still matches the
-    // cached page; ignoreVary so header variation can't cause a phantom miss.
+    // ignoreSearch so a link with ?utm_source=... still matches the cached page.
     const opts = { ignoreSearch: true, ignoreVary: true };
     const cachedResponse = await cache.match(req, opts);
     if (cachedResponse) return cachedResponse;
@@ -205,7 +179,6 @@ async function networkFirst(req, store = false) {
       if (shell) return shell;
     }
 
-    // respondWith(undefined) surfaces as an opaque network error; be explicit.
     return new Response('Offline and not cached.', {
       status: 503,
       statusText: 'Offline',

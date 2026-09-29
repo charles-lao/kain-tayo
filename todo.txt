@@ -6,7 +6,7 @@
 ### Completed (UI/UX redesign)
 - [x] Faded image bottom for the random meal card (scrim + name overlay)
 - [x] Rebranded off stock Bootswatch: warm palette, design tokens, self-hosted Fraunces + Plus Jakarta Sans
-- [x] Bottom tab bar on mobile, top nav on desktop — hamburger removed
+- [x] Bottom tab bar on mobile, top nav on desktop. Hamburger removed
 - [x] Meals list rebuilt as a photo grid with search; DataTables dependency dropped
 - [x] Filters moved to a bottom sheet with live match count, Clear all, accessible chips
 - [x] Sticky "Suggest another" bar so the primary action stays in thumb reach

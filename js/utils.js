@@ -1,13 +1,8 @@
-/**
- * MealManager handles all the logic for managing saved meals in localStorage.
- */
+/** Saved meal IDs in localStorage. */
 const MealManager = {
     _storageKey: 'savedMeals',
 
-    /**
-     * Get all saved meal IDs from localStorage.
-     * @returns {Array<string>} Array of meal IDs.
-     */
+    /** @returns {Array<string>} */
     getSavedMealIds: function() {
         try {
             const saved = localStorage.getItem(this._storageKey);
@@ -19,9 +14,8 @@ const MealManager = {
     },
 
     /**
-     * Save a meal ID to localStorage.
-     * @param {string} mealId The ID of the meal to save.
-     * @returns {boolean} True if successfully added, false if already exists.
+     * @param {string} mealId
+     * @returns {boolean} False if it was already saved.
      */
     addMeal: function(mealId) {
         const savedIds = this.getSavedMealIds();
@@ -35,9 +29,8 @@ const MealManager = {
     },
 
     /**
-     * Remove a meal ID from localStorage.
-     * @param {string} mealId The ID of the meal to remove.
-     * @returns {number} The index it occupied, so an undo can restore its position.
+     * @param {string} mealId
+     * @returns {number} The index it occupied, so Undo can restore its position.
      */
     removeMeal: function(mealId) {
         const savedIds = this.getSavedMealIds();
@@ -51,7 +44,7 @@ const MealManager = {
     },
 
     /**
-     * Re-insert a meal at a specific position (used by the undo affordance).
+     * Re-insert a meal at its old position, for Undo.
      * @param {string} mealId
      * @param {number} index
      */
@@ -65,19 +58,11 @@ const MealManager = {
         this.updateBadgeCount();
     },
 
-    /**
-     * Check if a meal is already saved.
-     * @param {string} mealId The ID of the meal.
-     * @returns {boolean} True if saved.
-     */
     isMealSaved: function(mealId) {
         return this.getSavedMealIds().includes(mealId.toString());
     },
 
-    /**
-     * Clear all saved meals.
-     * @returns {Array<string>} The IDs that were cleared, so an undo can restore them.
-     */
+    /** @returns {Array<string>} The cleared IDs, so Undo can restore them. */
     clearAll: function() {
         const previous = this.getSavedMealIds();
         localStorage.removeItem(this._storageKey);
@@ -86,7 +71,7 @@ const MealManager = {
     },
 
     /**
-     * Replace the whole saved list (used to undo a Clear All).
+     * Replace the saved list. Used by Clear all's Undo.
      * @param {Array<string>} ids
      */
     replaceAll: function(ids) {
@@ -95,9 +80,30 @@ const MealManager = {
     },
 
     /**
-     * Update every saved-count indicator on the page. Counts of zero are hidden
-     * rather than shown as "0" — an empty badge is noise.
+     * Save or unsave a meal and show a toast. Removing offers Undo.
+     * @param {string} mealId
+     * @param {string} mealName Used in the toast text.
+     * @param {function(boolean)} onChange Gets the new saved state after every
+     *   change, including Undo.
      */
+    toggleWithUndo: function(mealId, mealName, onChange) {
+        if (this.isMealSaved(mealId)) {
+            const index = this.removeMeal(mealId);
+            onChange(false);
+            showMessageToast(`Removed ${mealName}`, 'warning', {
+                label: 'Undo',
+                onClick: () => {
+                    this.restoreMeal(mealId, index);
+                    onChange(true);
+                }
+            });
+        } else if (this.addMeal(mealId)) {
+            onChange(true);
+            showMessageToast(`Saved ${mealName}`, 'success');
+        }
+    },
+
+    /** Update every saved-count badge. A count of zero hides the badge. */
     updateBadgeCount: function() {
         const count = this.getSavedMealIds().length;
         document.querySelectorAll('.savedMealsCount').forEach(el => {
@@ -107,17 +113,13 @@ const MealManager = {
     }
 };
 
-/**
- * MealDataService handles fetching and caching of the meals data.
- */
+/** Loads foods.json and builds meal markup. */
 const MealDataService = {
     _cachedMeals: null,
 
     /**
-     * Fetches all meals from the JSON data source.
-     * Freshness is the service worker's job (network-first on this path), so no
-     * cache-busting here.
-     * @returns {Promise<Array>} A promise that resolves to the array of meals.
+     * No cache-busting: the service worker serves this path network-first.
+     * @returns {Promise<Array>} The meals, or [] if the fetch fails.
      */
     getMeals: async function() {
         if (this._cachedMeals) {
@@ -125,6 +127,7 @@ const MealDataService = {
         }
         try {
             const response = await fetch('data/foods.json');
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
             this._cachedMeals = await response.json();
             return this._cachedMeals;
         } catch (error) {
@@ -133,28 +136,15 @@ const MealDataService = {
         }
     },
 
-    /**
-     * Get a meal by its ID.
-     * @param {string} id The meal ID.
-     * @returns {Promise<Object|null>}
-     */
-    getMealById: async function(id) {
-        const meals = await this.getMeals();
-        return meals.find(m => m.id.toString() === id.toString()) || null;
-    },
-
-    /**
-     * Dynamically extracts unique categories and types from the meal data.
-     * @returns {Promise<Object>} Object containing arrays of unique types and categories.
-     */
+    /** @returns {Promise<{categories: string[], types: string[]}>} Unique sorted values. */
     getFilterOptions: async function() {
         const meals = await this.getMeals();
         const categories = new Set();
         const types = new Set();
 
         meals.forEach(meal => {
-            meal.category.split(',').forEach(c => categories.add(c.trim()));
-            meal.type.split(',').forEach(t => types.add(t.trim()));
+            this.splitField(meal.category).forEach(c => categories.add(c));
+            this.splitField(meal.type).forEach(t => types.add(t));
         });
 
         return {
@@ -163,44 +153,23 @@ const MealDataService = {
         };
     },
 
-    /**
-     * Split a comma-separated field into trimmed values.
-     * @param {string} field
-     * @returns {Array<string>}
-     */
+    /** Split a comma-separated field into trimmed values. */
     splitField: function(field) {
         return (field || '').split(',').map(v => v.trim()).filter(Boolean);
     },
 
-    /**
-     * Returns the meal name as a Google Maps search query.
-     * @param {Object} meal
-     * @returns {string}
-     */
-    getMapsSearchQuery: function(meal) {
-        return meal.name;
-    },
-
-    /**
-     * True when the meal is something you'd go out for.
-     * @param {Object} meal
-     * @returns {boolean}
-     */
+    /** True for takeaway and dine-in meals. */
     isMapsRelevant: function(meal) {
         return this.splitField(meal.category).some(c => c === 'takeaway' || c === 'dine-in');
     },
 
     /**
-     * Google Maps link markup, or '' when the meal isn't something you go out for.
+     * Google Maps link markup, or '' for home-cooked meals.
      *
-     * A plain https link rather than a scripted custom-scheme launch. On iOS this
-     * is a Universal Link, so it opens the Google Maps app when installed and
-     * Google Maps on the web when not — the old `comgooglemaps://` approach threw
-     * a Safari "address is invalid" dialog for anyone without the app, and then
-     * its fallback timer opened Apple Maps on top of it. Android resolves the
-     * same URL to the app; desktop opens a tab.
-     *
-     * The icon-only variant still carries an accessible name.
+     * A plain https link, which iOS and Android open in the Maps app if it is
+     * installed and on the web if not. Don't go back to `comgooglemaps://`: on
+     * iOS without the app, Safari showed an error and the fallback then opened
+     * Apple Maps on top of it.
      * @param {Object} meal
      * @param {'hero'|'tile'|'inline'} variant
      * @returns {string}
@@ -208,7 +177,7 @@ const MealDataService = {
     getMapsButtonHtml: function(meal, variant = 'inline') {
         if (!this.isMapsRelevant(meal)) return '';
 
-        const query = encodeURIComponent(this.getMapsSearchQuery(meal));
+        const query = encodeURIComponent(meal.name);
         // &amp; because this lands in an HTML attribute.
         const href = `https://www.google.com/maps/search/?api=1&amp;query=${query}`;
         const label = `Find ${escapeHtml(meal.name)} on Google Maps`;
@@ -227,11 +196,7 @@ const MealDataService = {
                 </a>`;
     },
 
-    /**
-     * Category/type labels for a meal, as letterspaced badge markup.
-     * @param {Object} meal
-     * @returns {string}
-     */
+    /** Category and type badge markup for a meal. */
     getCategoryBadgesHtml: function(meal) {
         const cats = this.splitField(meal.category).map(c =>
             `<span class="cat cat--${escapeAttr(c)}">${escapeHtml(c)}</span>`
@@ -243,10 +208,7 @@ const MealDataService = {
     }
 };
 
-/**
- * Shared photo-tile renderer used by both Browse and Saved, so the two pages
- * stay visually identical.
- */
+/** Photo tile markup shared by Browse and Saved. */
 const MealGrid = {
     /**
      * @param {Object} meal
@@ -291,8 +253,7 @@ const MealGrid = {
     },
 
     /**
-     * Flip a save button between its two states in place.
-     * @param {HTMLElement} btn
+     * @param {HTMLElement} btn A .saveMealBtn
      * @param {boolean} saved
      */
     setSavedState: function(btn, saved) {
@@ -305,9 +266,98 @@ const MealGrid = {
     }
 };
 
-/* -------------------------------------------------------------------------
-   Escaping helpers — meal names come from JSON and land in innerHTML.
-   ------------------------------------------------------------------------- */
+/**
+ * Filter chips shared by Home and Browse. Both use the same localStorage key,
+ * so a selection carries over. Expects #filter-sheet, #category-chips,
+ * #type-chips and #clear-filters in the page.
+ */
+const MealFilters = {
+    _storageKey: 'activeFilters',
+    _onChange: null,
+    active: { categories: [], types: [] },
+
+    /**
+     * Load the saved selection, render the chips and wire up the controls.
+     * @param {Function} onChange Called after every change to the selection.
+     */
+    init: async function(onChange) {
+        this._onChange = onChange;
+        const options = await MealDataService.getFilterOptions();
+        this._load(options);
+
+        this._renderChips('category-chips', options.categories, 'categories');
+        this._renderChips('type-chips', options.types, 'types');
+
+        document.getElementById('filter-sheet').addEventListener('click', e => {
+            const chip = e.target.closest('.chip');
+            if (chip) this.toggle(chip.dataset.group, chip.dataset.value, chip);
+        });
+        document.getElementById('clear-filters').addEventListener('click', () => this.clear());
+    },
+
+    /**
+     * Drops saved values that are no longer in the data, e.g. after a rename.
+     * A stale value would filter with no chip on screen to turn it off.
+     */
+    _load: function(options) {
+        try {
+            const parsed = JSON.parse(localStorage.getItem(this._storageKey) || '{}');
+            this.active.categories = (parsed.categories || []).filter(c => options.categories.includes(c));
+            this.active.types = (parsed.types || []).filter(t => options.types.includes(t));
+        } catch (e) {
+            console.warn('Ignoring malformed saved filters', e);
+        }
+    },
+
+    _save: function() {
+        localStorage.setItem(this._storageKey, JSON.stringify(this.active));
+        if (this._onChange) this._onChange();
+    },
+
+    _renderChips: function(containerId, options, group) {
+        document.getElementById(containerId).innerHTML = options.map(option => {
+            const isActive = this.active[group].includes(option);
+            return `<button type="button" class="chip" aria-pressed="${isActive}"
+                            data-group="${group}" data-value="${escapeHtml(option)}">
+                        ${escapeHtml(option)}
+                    </button>`;
+        }).join('');
+    },
+
+    toggle: function(group, value, chip) {
+        const nowActive = !this.active[group].includes(value);
+        chip.setAttribute('aria-pressed', String(nowActive));
+        this.active[group] = nowActive
+            ? this.active[group].concat(value)
+            : this.active[group].filter(v => v !== value);
+        this._save();
+    },
+
+    clear: function() {
+        this.active = { categories: [], types: [] };
+        document.querySelectorAll('#filter-sheet .chip').forEach(c => c.setAttribute('aria-pressed', 'false'));
+        this._save();
+    },
+
+    /** Number of selected chips across both groups. */
+    activeCount: function() {
+        return this.active.categories.length + this.active.types.length;
+    },
+
+    /**
+     * True when the meal fits the selection. Within a group any chip matches;
+     * across groups both must match.
+     */
+    matches: function(meal) {
+        const { categories, types } = this.active;
+        const mealCats = MealDataService.splitField(meal.category);
+        const mealTypes = MealDataService.splitField(meal.type);
+        return (!categories.length || categories.some(c => mealCats.includes(c))) &&
+               (!types.length || types.some(t => mealTypes.includes(t)));
+    }
+};
+
+/* Meal data from JSON goes into innerHTML, so escape it with these. */
 
 function escapeHtml(str) {
     return String(str).replace(/[&<>"']/g, ch => ({
@@ -320,7 +370,6 @@ function escapeAttr(str) {
 }
 
 /**
- * Show a toast.
  * @param {string} message
  * @param {'success'|'warning'} tone
  * @param {{label: string, onClick: Function}} [action] Optional inline action, e.g. Undo.
@@ -349,9 +398,14 @@ const showMessageToast = (message = null, tone = 'success', action = null) => {
     btn.className = 'toast-action';
     oldBtn.replaceWith(btn);
 
-    let instance = bootstrap.Toast.getInstance(toastElement);
-    if (instance) instance.dispose();
-    instance = new bootstrap.Toast(toastElement, { delay: action ? 6000 : 3000 });
+    // animation: false makes show and hide synchronous. With Bootstrap's fade, a
+    // toast shown during the previous one's fade-out ended up hidden, or threw
+    // once the old instance was disposed. The entrance animation is in CSS.
+    bootstrap.Toast.getInstance(toastElement)?.dispose();
+    const instance = new bootstrap.Toast(toastElement, {
+        animation: false,
+        delay: action ? 6000 : 3000
+    });
 
     if (action) {
         btn.textContent = action.label;
@@ -367,9 +421,8 @@ const showMessageToast = (message = null, tone = 'success', action = null) => {
 };
 
 /**
- * ThemeManager handles dark/light mode switching.
- * The *initial* attribute is set by a blocking inline script in <head> so there is
- * no light-mode flash; this only wires up the toggle and the system listener.
+ * Dark/light toggle. The inline script in each page's <head> sets the initial
+ * theme to avoid a light flash; this only wires the toggle and system listener.
  */
 const ThemeManager = {
     _storageKey: 'theme-preference',
@@ -422,8 +475,8 @@ const ThemeManager = {
 };
 
 /**
- * Attach medium-zoom if it loaded. The CDN can fail (or be missing offline on a
- * cold cache), and a hard failure here used to take down whatever ran after it.
+ * Attach medium-zoom if it loaded. The CDN script can be missing offline, and a
+ * throw here used to stop the rest of the page script.
  * @param {Element|string} target
  */
 function attachZoom(target) {
@@ -434,8 +487,19 @@ function attachZoom(target) {
     }
 }
 
-// Auto-update badge count, init theme, and image zoom on page load
-$(document).ready(function() {
+/**
+ * Run fn once the DOM is parsed, or right away if it already is.
+ * @param {Function} fn
+ */
+function onReady(fn) {
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', fn);
+    } else {
+        fn();
+    }
+}
+
+onReady(function() {
     MealManager.updateBadgeCount();
     ThemeManager.init();
     ThemeManager.updateThemeColor();
@@ -443,8 +507,6 @@ $(document).ready(function() {
     if (typeof mediumZoom === 'function') {
         window.zoom = mediumZoom('.fullscreen-img-modal', { background: 'rgba(0,0,0,0.92)', margin: 24 });
     }
-});
 
-$(document).on('click', '#theme-toggle', function() {
-    ThemeManager.toggle();
+    document.getElementById('theme-toggle')?.addEventListener('click', () => ThemeManager.toggle());
 });

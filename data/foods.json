@@ -51,7 +51,7 @@
     {
         "id": "8",
         "name": "Adobong Sitaw",
-        "type": "pork, vegetable",
+        "type": "pork, vegetables",
         "category": "home-cooked",
         "image": "images/adobong-sitaw.jpg"
     },
@@ -296,14 +296,14 @@
     {
         "id": "43",
         "name": "Burger Fuel",
-        "type": "chicken, beef, vegetable",
+        "type": "chicken, beef, vegetables",
         "category": "takeaway, dine-in",
         "image": "images/burger-fuel.jpg"
     },
     {
         "id": "44",
         "name": "Kebab Inn Pita Doner",
-        "type": "chicken, beef, lamb, vegetable",
+        "type": "chicken, beef, lamb, vegetables",
         "category": "takeaway, dine-in",
         "image": "images/kebab-inn-doner.avif"
     },
@@ -611,7 +611,7 @@
     {
         "id": "88",
         "name": "Crispy Okoy (Fritter)",
-        "type": "vegetable",
+        "type": "vegetables",
         "category": "home-cooked",
         "image": "images/okoy.png"
     }
